@@ -95,8 +95,13 @@ namespace Vss3WayMerge
 				_theirsVss = null;
 			}
 
-			var theirsSsIni = GetIniPath(textBoxVssIniTheirs.Text);
-			var mineSsIni = GetIniPath(textBoxVssIniMine.Text);
+			var theirsSsIni = GetIniPath(textBoxVssIniTheirs.Text, "'theirs'");
+			if (theirsSsIni == null)
+				return;
+
+			var mineSsIni = GetIniPath(textBoxVssIniMine.Text, "'mine'");
+			if (mineSsIni == null)
+				return;
 
 			_mineVss = new VSSDatabase();
 			_mineVss.Open(mineSsIni, textBoxMineUser.Text, textBoxMinePwd.Text);
@@ -149,7 +154,7 @@ namespace Vss3WayMerge
 
 		void AddLog(string msg, bool activateLog = true)
 		{
-			textBoxLog.Text += msg + "\r\n";
+			textBoxLog.Text += msg.Replace("\r", "").Replace("\n", "\r\n") + "\r\n";
 			if (activateLog)
 				tabControl.SelectedIndex = 2;
 		}
@@ -451,23 +456,23 @@ For merge will be used mine base.
 			return localSpec;
 		}
 
-		public static string GetIniPath(string enteredValue)
+		public string GetIniPath(string enteredValue, string hint)
 		{
 			var ssIni = enteredValue;
-			if (Directory.Exists(ssIni))
+			if (!string.IsNullOrWhiteSpace(ssIni) && Directory.Exists(ssIni))
 			{
 				ssIni = Path.Combine(ssIni, "srcsafe.ini");
 
 				if (!File.Exists(ssIni))
 				{
-					MessageBox.Show("srcsafe.ini not found in " + enteredValue);
+					ShowError("srcsafe.ini not found in '" + enteredValue + "' path for " + hint);
 					return null;
 				}
 			}
 
 			if (Path.GetFileName(ssIni).ToLowerInvariant() != "srcsafe.ini")
 			{
-				MessageBox.Show("Should be specified VSS dir or scrsafe.ini path");
+				ShowError("Should be specified VSS dir or scrsafe.ini path for " + hint);
 				return null;
 			}
 
@@ -1197,8 +1202,12 @@ For merge will be used mine base.
 
 		void buttonFindJournal_Click(object sender, EventArgs e)
 		{
+			var ssIniPath = GetIniPath(textBoxVssIniTheirs.Text, "'theirs'");
+			if (ssIniPath == null)
+				return;
+
 			// find journal file:
-			textBoxJournal.Text = File.ReadAllLines(textBoxVssIniTheirs.Text)
+			textBoxJournal.Text = File.ReadAllLines(ssIniPath)
 				.Select(l => l.Trim().ToLowerInvariant())
 				.Where(l => l.StartsWith("journal_file"))
 				.Select(l => l.Substring(l.IndexOf('=') + 1).Trim())
@@ -1279,15 +1288,42 @@ For merge will be used mine base.
 
 		void statsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var total = _listItems.Count;
-			var unmergeable = _listItems.Count(ca => ca.Status == Status.Unmergeable);
-			var mergeable = _listItems.Count(ca => ca.Status != Status.Unmergeable);
-			var mergedAndResolved = _listItems.Count(ca => ca.Status == Status.Merged || ca.Status == Status.MergedNoChanges || ca.Status == Status.ResolvedAsMine || ca.Status == Status.ResolvedAsTheirs);
-			var conflicted = _listItems.Count(ca => ca.Status == Status.Conflicted);
-			var pending = _listItems.Count(ca => ca.Status == Status.Nothing);
-			var errored = _listItems.Count(ca => ca.Status == Status.Error);
-
 			var sb = new StringBuilder();
+			sb.AppendLine("=== All items ===");
+			CalcStats(_listItemsNonFiltered, sb);
+
+			if (_listItems.Count != _listItemsNonFiltered.Count)
+			{
+				sb.AppendLine("\n");
+				sb.AppendLine("=== Filtered view ===");
+				CalcStats(_listItems, sb);
+			}
+			if (listViewChanged.SelectedIndices.Count != 0 && listViewChanged.SelectedIndices.Count != _listItems.Count)
+			{
+				sb.AppendLine("\n");
+				sb.AppendLine("=== Selected items ===");
+				CalcStats(listViewChanged.SelectedIndices.Cast<int>().Select(i => _listItems[i]).ToList(), sb);
+			}
+
+			AddLog(sb.ToString());
+
+			MessageBox.Show(this, sb.ToString(), "Stats", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+
+		static void CalcStats(ICollection<VssChangeAtom> list, StringBuilder sb)
+		{
+			var total = list.Count;
+			var unmergeable = list.Count(ca => ca.Status == Status.Unmergeable);
+			var mergeable = list.Count(ca => ca.Status != Status.Unmergeable);
+			var mergedAndResolved =
+				list.Count(
+					ca =>
+					ca.Status == Status.Merged || ca.Status == Status.MergedNoChanges || ca.Status == Status.ResolvedAsMine ||
+					ca.Status == Status.ResolvedAsTheirs);
+			var conflicted = list.Count(ca => ca.Status == Status.Conflicted);
+			var pending = list.Count(ca => ca.Status == Status.Nothing);
+			var errored = list.Count(ca => ca.Status == Status.Error);
+
 			sb.AppendFormat("Total items: {0}:\r\n", total);
 			sb.AppendFormat("    Unmergeable: {0}\r\n", unmergeable);
 			sb.AppendFormat("    Mergeable: {0}:\r\n", mergeable);
@@ -1295,10 +1331,6 @@ For merge will be used mine base.
 			sb.AppendFormat("        Conflicted: {0}\r\n", conflicted);
 			sb.AppendFormat("        Erroneous: {0}\r\n", errored);
 			sb.AppendFormat("        Pending for merge: {0}", pending);
-
-			AddLog(sb.ToString());
-
-			MessageBox.Show(this, sb.ToString(), "Stats", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
 		#region Files filter
