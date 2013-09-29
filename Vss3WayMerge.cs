@@ -28,6 +28,7 @@ namespace Vss3WayMerge
 
 			_tempDir = Path.Combine(Path.GetTempPath(), "VSS3WayMerge");
 
+			// silently clear previous temp files
 			try
 			{
 				foreach (var fse in Directory.EnumerateFileSystemEntries(_tempDir, "*.*", SearchOption.AllDirectories))
@@ -106,11 +107,12 @@ namespace Vss3WayMerge
 			_mineVss = new VSSDatabase();
 			_mineVss.Open(mineSsIni, textBoxMineUser.Text, textBoxMinePwd.Text);
 
-			if (string.IsNullOrWhiteSpace(_mineVss.VSSItem["$/"].LocalSpec))
-			{
-				MessageBox.Show("Working copy not set for 'mine' SourceSafe database.\nPlease set and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
-			}
+			// TODO:
+			//if (string.IsNullOrWhiteSpace(_mineVss.VSSItem["$/"].LocalSpec))
+			//{
+			//	ShowError("Working copy not set for 'mine' SourceSafe database.\nPlease set and try again.");
+			//	return;
+			//}
 
 			_theirsVss = new VSSDatabase();
 			_theirsVss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
@@ -121,14 +123,8 @@ namespace Vss3WayMerge
 				try
 				{
 					var arr = line.Split('	');
-					var status = arr[0];
-					var spec = arr[1];
-					var ca = new VssChangeAtom { Spec = spec };
-					if (status == "ok")
-					{
-						ca.BaseVersion = Int32.Parse(arr[2]) - 1;
-					}
-					else
+					var ca = new VssChangeAtom { Spec = arr[0], BaseVersion = Int32.Parse(arr[1]) - 1 };
+					if (arr.Length > 2)
 					{
 						ca.Status = Status.Unmergeable;
 						ca.StatusDetails = arr[2];
@@ -1233,13 +1229,10 @@ For merge will be used mine base.
 			var str = nodes
 				.Aggregate(new StringBuilder(), (sb, n) => {
 
-					if (n.IsPureModified)
+					sb.AppendFormat("{0}	{1}", n.Spec, n.FirstChange);
+					if (!n.IsPureModified)
 					{
-						sb.AppendFormat("ok	{0}	{1}\r\n", n.Spec, n.FirstChange.Value);
-					}
-					else
-					{
-						sb.AppendFormat("bad	{0}	", n.Spec);
+						sb.AppendFormat("	");
 
 						if (n.IsAdded)
 							sb.AppendFormat(" added");
@@ -1266,9 +1259,9 @@ For merge will be used mine base.
 							sb.AppendFormat(" shared_from({0})", n.SharedFrom);
 						if (n.CopiedFrom != null)
 							sb.AppendFormat(" copied_from({0})", n.CopiedFrom);
-
-						sb.AppendFormat("\r\n");
 					}
+
+					sb.AppendFormat("\r\n");
 
 					return sb;
 				})

@@ -72,7 +72,7 @@ namespace Vss3WayMerge.VJP
 
 						case VssChangeType.CheckIn:
 							inf.IsModified = true;
-							if (!inf.FirstChange.HasValue)
+							if (inf.FirstChange == 0)
 								inf.FirstChange = c.Version;
 							inf.LatestVersion = Math.Max(inf.LatestVersion, c.Version);
 							break;

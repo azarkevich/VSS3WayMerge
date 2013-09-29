@@ -24,7 +24,7 @@ namespace Vss3WayMerge.VJP
 		public string SharedFrom;
 		public string CopiedFrom;
 
-		public int? FirstChange;
+		public int FirstChange;
 		public int LatestVersion;
 
 		public bool IsPureModified
