@@ -117,6 +117,8 @@ namespace Vss3WayMerge
 			_theirsVss = new VSSDatabase();
 			_theirsVss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
 
+			var hasErrors = false;
+
 			var newListItems = new List<VssChangeAtom>();
 			foreach (var line in textBoxForMergeUnparsedList.Text.Split('\n').Select(l => l.Trim()).Where(l => l != ""))
 			{
@@ -136,8 +138,14 @@ namespace Vss3WayMerge
 				}
 				catch (Exception ex)
 				{
-					ShowError("Invalid line: " + line + "\r\n" + ex.Message);
+					AddLog("Invalid line: " + line + "\r\n" + ex.Message + "\r\n");
+					hasErrors = true;
 				}
+			}
+
+			if (hasErrors)
+			{
+				ShowError("Some lines parsed with errors. See log.");
 			}
 
 			_listItemsNonFiltered = newListItems;
