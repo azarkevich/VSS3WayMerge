@@ -48,7 +48,7 @@
 			this.colMergeDestination = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.contextMenuStripDiffs = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.mergeNonInteractiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.mergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.threeWayMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.threeWayDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemOtherDiffs = new System.Windows.Forms.ToolStripMenuItem();
 			this.mineNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -278,7 +278,7 @@
 			// 
 			this.contextMenuStripDiffs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mergeNonInteractiveToolStripMenuItem,
-            this.mergeToolStripMenuItem,
+            this.threeWayMergeToolStripMenuItem,
             this.threeWayDiffToolStripMenuItem,
             this.toolStripMenuItemOtherDiffs,
             this.toolStripSeparator3,
@@ -295,25 +295,28 @@
             this.filterToolStripMenuItem,
             this.moreToolStripMenuItem});
 			this.contextMenuStripDiffs.Name = "contextMenuStripDiffs";
-			this.contextMenuStripDiffs.Size = new System.Drawing.Size(259, 314);
+			this.contextMenuStripDiffs.Size = new System.Drawing.Size(259, 336);
 			this.contextMenuStripDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDiffs_Opening);
 			// 
 			// mergeNonInteractiveToolStripMenuItem
 			// 
 			this.mergeNonInteractiveToolStripMenuItem.Name = "mergeNonInteractiveToolStripMenuItem";
+			this.mergeNonInteractiveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
 			this.mergeNonInteractiveToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
 			this.mergeNonInteractiveToolStripMenuItem.Text = "Merge non-interactive";
 			this.mergeNonInteractiveToolStripMenuItem.Click += new System.EventHandler(this.mergeNoninteractiveToolStripMenuItem_Click);
 			// 
-			// mergeToolStripMenuItem
+			// threeWayMergeToolStripMenuItem
 			// 
-			this.mergeToolStripMenuItem.Name = "mergeToolStripMenuItem";
-			this.mergeToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-			this.mergeToolStripMenuItem.Text = "Merge...";
-			this.mergeToolStripMenuItem.Click += new System.EventHandler(this.mergeToolStripMenuItem_Click);
+			this.threeWayMergeToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+			this.threeWayMergeToolStripMenuItem.Name = "threeWayMergeToolStripMenuItem";
+			this.threeWayMergeToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+			this.threeWayMergeToolStripMenuItem.Text = "3-Way Merge...";
+			this.threeWayMergeToolStripMenuItem.Click += new System.EventHandler(this.mergeToolStripMenuItem_Click);
 			// 
 			// threeWayDiffToolStripMenuItem
 			// 
+			this.threeWayDiffToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
 			this.threeWayDiffToolStripMenuItem.Name = "threeWayDiffToolStripMenuItem";
 			this.threeWayDiffToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
 			this.threeWayDiffToolStripMenuItem.Text = "3-Way Diff...";
@@ -423,7 +426,7 @@
 			// 
 			this.revertresetOrRemoveToolStripMenuItem.Name = "revertresetOrRemoveToolStripMenuItem";
 			this.revertresetOrRemoveToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-			this.revertresetOrRemoveToolStripMenuItem.Text = "Revert merged(reset or remove)";
+			this.revertresetOrRemoveToolStripMenuItem.Text = "Reset merged";
 			this.revertresetOrRemoveToolStripMenuItem.Click += new System.EventHandler(this.revertResetOrRemoveToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator5
@@ -799,7 +802,7 @@
 		private System.Windows.Forms.ColumnHeader colDiffMergeStatus;
 		private System.Windows.Forms.ColumnHeader colDiffStats;
 		private System.Windows.Forms.ContextMenuStrip contextMenuStripDiffs;
-		private System.Windows.Forms.ToolStripMenuItem mergeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem threeWayMergeToolStripMenuItem;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.TextBox textBoxMineUser;
 		private System.Windows.Forms.TextBox textBoxMinePwd;

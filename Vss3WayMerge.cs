@@ -489,12 +489,15 @@ For merge will be used mine base.
 			var oneOrMoreSelected = listViewChanged.SelectedIndices.Count >= 1;
 
 			var singleMergedSelected = (singleItemSelected && _listItems[listViewChanged.SelectedIndices[0]].IsMerged);
+			var singleWithMergeDstSelected = (singleItemSelected && _listItems[listViewChanged.SelectedIndices[0]].MergedPath != null);
 			var singleMergeableSelected = (singleItemSelected && _listItems[listViewChanged.SelectedIndices[0]].Status != Status.Unmergeable);
 			var oneOrMoreMergeableSelected = listViewChanged.SelectedIndices.Cast<int>().Count(i => _listItems[i].Status != Status.Unmergeable) > 0;
 
 			mergeNonInteractiveToolStripMenuItem.Enabled = oneOrMoreMergeableSelected;
-			mergeToolStripMenuItem.Enabled = singleMergeableSelected;
-			threeWayDiffToolStripMenuItem.Enabled = singleMergeableSelected;
+
+			threeWayMergeToolStripMenuItem.Visible = singleMergeableSelected && singleWithMergeDstSelected;
+			threeWayDiffToolStripMenuItem.Visible = singleMergeableSelected && !singleWithMergeDstSelected;
+	
 			mineNewToolStripMenuItem.Enabled = oneOrMoreMergeableSelected;
 			theirsNewToolStripMenuItem.Enabled = oneOrMoreMergeableSelected;
 			theirsChnagesAsUnifiedDiffToolStripMenuItem.Enabled = oneOrMoreMergeableSelected;
