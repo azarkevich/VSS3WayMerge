@@ -68,6 +68,14 @@
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
 			this.excludeFromListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+			this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripTextBoxPathsFilter = new System.Windows.Forms.ToolStripTextBox();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.onlySelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.filterexludeSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.moreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemCopyParseableToClip = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,14 +101,6 @@
 			this.textBoxMineUser = new System.Windows.Forms.TextBox();
 			this.textBoxVssIniTheirs = new System.Windows.Forms.TextBox();
 			this.textBoxVssIniMine = new System.Windows.Forms.TextBox();
-			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripTextBoxPathsFilter = new System.Windows.Forms.ToolStripTextBox();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.onlySelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.filterexludeSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.tabControl.SuspendLayout();
 			this.tabPageForMergeFiles.SuspendLayout();
 			this.tabPageDiffs.SuspendLayout();
@@ -295,7 +295,7 @@
             this.filterToolStripMenuItem,
             this.moreToolStripMenuItem});
 			this.contextMenuStripDiffs.Name = "contextMenuStripDiffs";
-			this.contextMenuStripDiffs.Size = new System.Drawing.Size(259, 336);
+			this.contextMenuStripDiffs.Size = new System.Drawing.Size(259, 314);
 			this.contextMenuStripDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDiffs_Opening);
 			// 
 			// mergeNonInteractiveToolStripMenuItem
@@ -442,6 +442,69 @@
 			// 
 			this.toolStripSeparator6.Name = "toolStripSeparator6";
 			this.toolStripSeparator6.Size = new System.Drawing.Size(255, 6);
+			// 
+			// filterToolStripMenuItem
+			// 
+			this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.toolStripMenuItem1,
+            this.toolStripTextBoxPathsFilter,
+            this.toolStripSeparator2,
+            this.onlySelectedToolStripMenuItem,
+            this.filterexludeSelectionToolStripMenuItem});
+			this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
+			this.filterToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+			this.filterToolStripMenuItem.Text = "Filter";
+			this.filterToolStripMenuItem.DropDownOpening += new System.EventHandler(this.filterToolStripMenuItem_DropDownOpening);
+			// 
+			// clearToolStripMenuItem
+			// 
+			this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+			this.clearToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+			this.clearToolStripMenuItem.Text = "Clear";
+			this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator7
+			// 
+			this.toolStripSeparator7.Name = "toolStripSeparator7";
+			this.toolStripSeparator7.Size = new System.Drawing.Size(257, 6);
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Enabled = false;
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
+			this.toolStripMenuItem1.Text = "Files filter:";
+			// 
+			// toolStripTextBoxPathsFilter
+			// 
+			this.toolStripTextBoxPathsFilter.ForeColor = System.Drawing.Color.Silver;
+			this.toolStripTextBoxPathsFilter.Name = "toolStripTextBoxPathsFilter";
+			this.toolStripTextBoxPathsFilter.Size = new System.Drawing.Size(200, 23);
+			this.toolStripTextBoxPathsFilter.Text = "file path regex filter";
+			this.toolStripTextBoxPathsFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.toolStripTextBoxPathsFilter_KeyUp);
+			this.toolStripTextBoxPathsFilter.Click += new System.EventHandler(this.toolStripTextBoxPathsFilter_Click);
+			this.toolStripTextBoxPathsFilter.TextChanged += new System.EventHandler(this.toolStripTextBoxPathsFilter_TextChanged);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(257, 6);
+			// 
+			// onlySelectedToolStripMenuItem
+			// 
+			this.onlySelectedToolStripMenuItem.Name = "onlySelectedToolStripMenuItem";
+			this.onlySelectedToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+			this.onlySelectedToolStripMenuItem.Text = "Filter to selection";
+			this.onlySelectedToolStripMenuItem.Click += new System.EventHandler(this.onlySelectedToolStripMenuItem_Click);
+			// 
+			// filterexludeSelectionToolStripMenuItem
+			// 
+			this.filterexludeSelectionToolStripMenuItem.Name = "filterexludeSelectionToolStripMenuItem";
+			this.filterexludeSelectionToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+			this.filterexludeSelectionToolStripMenuItem.Text = "Exclude selection";
+			this.filterexludeSelectionToolStripMenuItem.Click += new System.EventHandler(this.filterToSelectionInversionToolStripMenuItem_Click);
 			// 
 			// moreToolStripMenuItem
 			// 
@@ -613,14 +676,14 @@
 			this.label6.AutoSize = true;
 			this.label6.Location = new System.Drawing.Point(13, 39);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(293, 13);
+			this.label6.Size = new System.Drawing.Size(311, 13);
 			this.label6.TabIndex = 9;
-			this.label6.Text = "Detached merge destination. Leave empty for merge to VSS:";
+			this.label6.Text = "Merge destination (merge to VSS checkout is not supported yet):";
 			// 
 			// textBoxDetachedMergeDestination
 			// 
 			this.textBoxDetachedMergeDestination.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "DetachedMergeDestination", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxDetachedMergeDestination.Location = new System.Drawing.Point(312, 36);
+			this.textBoxDetachedMergeDestination.Location = new System.Drawing.Point(330, 36);
 			this.textBoxDetachedMergeDestination.Name = "textBoxDetachedMergeDestination";
 			this.textBoxDetachedMergeDestination.Size = new System.Drawing.Size(238, 20);
 			this.textBoxDetachedMergeDestination.TabIndex = 10;
@@ -685,69 +748,6 @@
 			this.textBoxVssIniMine.Size = new System.Drawing.Size(233, 20);
 			this.textBoxVssIniMine.TabIndex = 6;
 			this.textBoxVssIniMine.Text = global::Vss3WayMerge.Properties.Settings.Default.VssMine;
-			// 
-			// toolStripMenuItem1
-			// 
-			this.toolStripMenuItem1.Enabled = false;
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
-			this.toolStripMenuItem1.Text = "Files filter:";
-			// 
-			// toolStripTextBoxPathsFilter
-			// 
-			this.toolStripTextBoxPathsFilter.ForeColor = System.Drawing.Color.Silver;
-			this.toolStripTextBoxPathsFilter.Name = "toolStripTextBoxPathsFilter";
-			this.toolStripTextBoxPathsFilter.Size = new System.Drawing.Size(200, 23);
-			this.toolStripTextBoxPathsFilter.Text = "file path regex filter";
-			this.toolStripTextBoxPathsFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.toolStripTextBoxPathsFilter_KeyUp);
-			this.toolStripTextBoxPathsFilter.Click += new System.EventHandler(this.toolStripTextBoxPathsFilter_Click);
-			this.toolStripTextBoxPathsFilter.TextChanged += new System.EventHandler(this.toolStripTextBoxPathsFilter_TextChanged);
-			// 
-			// toolStripSeparator2
-			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(257, 6);
-			// 
-			// onlySelectedToolStripMenuItem
-			// 
-			this.onlySelectedToolStripMenuItem.Name = "onlySelectedToolStripMenuItem";
-			this.onlySelectedToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-			this.onlySelectedToolStripMenuItem.Text = "Filter to selection";
-			this.onlySelectedToolStripMenuItem.Click += new System.EventHandler(this.onlySelectedToolStripMenuItem_Click);
-			// 
-			// filterexludeSelectionToolStripMenuItem
-			// 
-			this.filterexludeSelectionToolStripMenuItem.Name = "filterexludeSelectionToolStripMenuItem";
-			this.filterexludeSelectionToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-			this.filterexludeSelectionToolStripMenuItem.Text = "Exclude selection";
-			this.filterexludeSelectionToolStripMenuItem.Click += new System.EventHandler(this.filterToSelectionInversionToolStripMenuItem_Click);
-			// 
-			// filterToolStripMenuItem
-			// 
-			this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearToolStripMenuItem,
-            this.toolStripSeparator7,
-            this.toolStripMenuItem1,
-            this.toolStripTextBoxPathsFilter,
-            this.toolStripSeparator2,
-            this.onlySelectedToolStripMenuItem,
-            this.filterexludeSelectionToolStripMenuItem});
-			this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-			this.filterToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-			this.filterToolStripMenuItem.Text = "Filter";
-			this.filterToolStripMenuItem.DropDownOpening += new System.EventHandler(this.filterToolStripMenuItem_DropDownOpening);
-			// 
-			// clearToolStripMenuItem
-			// 
-			this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-			this.clearToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-			this.clearToolStripMenuItem.Text = "Clear";
-			this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator7
-			// 
-			this.toolStripSeparator7.Name = "toolStripSeparator7";
-			this.toolStripSeparator7.Size = new System.Drawing.Size(257, 6);
 			// 
 			// Vss3WayMerge
 			// 
