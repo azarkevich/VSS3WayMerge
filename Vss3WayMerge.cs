@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,16 +12,20 @@ using System.IO;
 using SharpSvn.Diff;
 using SourceSafeTypeLib;
 using System.ComponentModel;
+using Vss3WayMerge.Drivers;
+using Vss3WayMerge.Interfaces;
 using Vss3WayMerge.Properties;
 using System.Collections.Generic;
+using Vss3WayMerge.Tools;
 using Vss3WayMerge.VJP;
 
 namespace Vss3WayMerge
 {
-	public partial class Vss3WayMerge : Form
+	public partial class Vss3WayMerge : Form, IErrorNotification
 	{
 		readonly string _tempDir;
 		readonly SHA1Managed _hash = new SHA1Managed();
+		IMergeDestinationDriver _driver;
 
 		public Vss3WayMerge()
 		{
@@ -47,40 +52,43 @@ namespace Vss3WayMerge
 				Directory.CreateDirectory(_tempDir);
 		}
 
+		IDisposable StartBulkOperation()
+		{
+			_bulkOperation = true;
+
+			return Disposable.Create(() => _bulkOperation = false);
+		}
+
 		VSSDatabase _mineVss;
 		VSSDatabase _theirsVss;
-		string _mergeDestination;
+
 		List<VssChangeAtom> _listItems = new List<VssChangeAtom>();
 		List<VssChangeAtom> _listItemsNonFiltered = new List<VssChangeAtom>();
 
 		void buttonParseForMergeList_Click(object sender, EventArgs e)
 		{
-			var cur = Cursor;
 			try
 			{
-				Settings.Default.Save();
-				_mergeDestination = null;
-				tabControl.SelectedIndex = 1;
-				if (!string.IsNullOrWhiteSpace(textBoxDetachedMergeDestination.Text))
+				using (new Waiter(this))
+				using (StartBulkOperation())
 				{
-					_mergeDestination = textBoxDetachedMergeDestination.Text.Replace('/', '\\');
-					if (!Directory.Exists(_mergeDestination))
-						Directory.CreateDirectory(_mergeDestination);
-				}
+					Settings.Default.Save();
 
-				buttonParseForMergeList.Enabled = false;
-				Cursor = Cursors.WaitCursor;
-				ParseChanges();
+					tabControl.SelectedIndex = 1;
+
+					ParseChanges();
+				}
 			}
-			finally 
+			catch (Exception ex)
 			{
-				buttonParseForMergeList.Enabled = true;
-				Cursor = cur;
+				ShowError(ex.Message);
 			}
 		}
 
 		void ParseChanges()
 		{
+			_driver = null;
+
 			// cleanup
 			textBoxLog.Clear();
 
@@ -107,17 +115,23 @@ namespace Vss3WayMerge
 			_mineVss = new VSSDatabase();
 			_mineVss.Open(mineSsIni, textBoxMineUser.Text, textBoxMinePwd.Text);
 
-			// TODO:
-			//if (string.IsNullOrWhiteSpace(_mineVss.VSSItem["$/"].LocalSpec))
-			//{
-			//	ShowError("Working copy not set for 'mine' SourceSafe database.\nPlease set and try again.");
-			//	return;
-			//}
-
 			_theirsVss = new VSSDatabase();
 			_theirsVss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
 
-			var hasErrors = false;
+			// start driver
+			if (radioButtonVssConnected.Checked)
+			{
+				_driver = new VssDriver(this, _mineVss);
+			}
+			else if (radioButtonDetached.Checked)
+			{
+				_driver = new DetachedDriver(this, textBoxDetachedMergeDestination.Text);
+			}
+
+			if (_driver == null || !_driver.InitDriver())
+				return;
+
+			var hasParsingErrors = false;
 
 			var newListItems = new List<VssChangeAtom>();
 			foreach (var line in textBoxForMergeUnparsedList.Text.Split('\n').Select(l => l.Trim()).Where(l => l != ""))
@@ -134,16 +148,17 @@ namespace Vss3WayMerge
 
 					ca.OriginalLine = line;
 
+					_driver.Init(ca);
 					newListItems.Add(ca);
 				}
 				catch (Exception ex)
 				{
 					AddLog("Invalid line: " + line + "\r\n" + ex.Message + "\r\n");
-					hasErrors = true;
+					hasParsingErrors = true;
 				}
 			}
 
-			if (hasErrors)
+			if (hasParsingErrors)
 			{
 				ShowError("Some lines parsed with errors. See log.");
 			}
@@ -346,58 +361,7 @@ For merge will be used mine base.
 
 		bool EnsureMergeDestination(VssChangeAtom ca)
 		{
-			try
-			{
-				if (ca.MergedPath != null)
-					return true;
-
-				if (_mergeDestination != null)
-				{
-					// rel to merge destination root
-					ca.MergedPath = Path.Combine(_mergeDestination, ca.Spec.TrimStart("$/".ToCharArray()).Replace('/', '\\'));
-					var dir = Path.GetDirectoryName(ca.MergedPath);
-					if (!Directory.Exists(dir))
-						Directory.CreateDirectory(dir);
-				}
-				return true;
-			}
-			catch (Exception ex)
-			{
-				if (!_bulkOperation)
-				{
-					ShowError(ex.Message, ca.Spec, "Merged");
-				}
-				ca.Status = Status.Error;
-				ca.StatusDetails = "Merged: " + ex.Message;
-				return false;
-			}
-			/*
-			try
-			{
-				var item = _mineVss.VSSItem[ca.Spec];
-
-				if (item.IsCheckedOut != 0)
-				{
-					ca.MergedPath = item.LocalSpec;
-					ca.StatusDetails = "ChOut: " + item.LocalSpec;
-					return false;
-				}
-
-				if(MessageBox.Show("Checkout mine file ?", "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
-					return false;
-
-				item.Checkout();
-
-				ca.MergedPath = item.LocalSpec;
-				ca.StatusDetails = "ChOut: " + item.LocalSpec;
-			}
-			catch (Exception ex)
-			{
-				if (MessageBox.Show("Item " + ca.Spec + " checkout error:\n" + ex.Message, "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
-					return false;
-			}
-			return true;
-			*/
+			return _driver.EnsureMergeDestination(ca);
 		}
 
 		void ShowError(string error, string spec = null, string ssIni = null)
@@ -845,23 +809,19 @@ For merge will be used mine base.
 		{
 			foreach (var ca in GetSelectedMergeableItems())
 			{
-				if (_mergeDestination != null)
+				try{
+					if (!EnsureMine(ca) || !_driver.EnsureMergeDestination(ca))
+						continue;
+
+					File.Copy(ca.MinePath, ca.MergedPath, true);
+					File.SetAttributes(ca.MergedPath, FileAttributes.Normal); 
+					ca.Status = Status.ResolvedAsMine;
+					ca.StatusDetails = null;
+				}
+				catch(Exception ex)
 				{
-					try{
-						if (EnsureMine(ca) && EnsureMergeDestination(ca))
-						{
-							File.Copy(ca.MinePath, ca.MergedPath, true);
-							File.SetAttributes(ca.MergedPath, FileAttributes.Normal); 
-							ca.Status = Status.ResolvedAsMine;
-							ca.StatusDetails = null;
-						}
-					}
-					catch(Exception ex)
-					{
-						ca.Status = Status.Error;
-						ca.StatusDetails = ex.Message;
-					}
-					continue;
+					ca.Status = Status.Error;
+					ca.StatusDetails = ex.Message;
 				}
 				/*
 				try
@@ -894,25 +854,20 @@ For merge will be used mine base.
 		{
 			foreach (var ca in GetSelectedMergeableItems())
 			{
-				if (_mergeDestination != null)
+				try
 				{
-					try
-					{
-						if (EnsureTheirs(ca) && EnsureMergeDestination(ca))
-						{
-							File.Copy(ca.TheirsPath, ca.MergedPath, true);
-							File.SetAttributes(ca.MergedPath, FileAttributes.Normal);
-							ca.Status = Status.ResolvedAsTheirs;
-							ca.StatusDetails = null;
-						}
-					}
-					catch (Exception ex)
-					{
-						ca.Status = Status.Error;
-						ca.StatusDetails = ex.Message;
-					}
+					if (!EnsureTheirs(ca) || !_driver.EnsureMergeDestination(ca))
+						continue;
 
-					continue;
+					File.Copy(ca.TheirsPath, ca.MergedPath, true);
+					File.SetAttributes(ca.MergedPath, FileAttributes.Normal);
+					ca.Status = Status.ResolvedAsTheirs;
+					ca.StatusDetails = null;
+				}
+				catch (Exception ex)
+				{
+					ca.Status = Status.Error;
+					ca.StatusDetails = ex.Message;
 				}
 				/*
 				try
@@ -1002,21 +957,24 @@ For merge will be used mine base.
 
 		void mergeNoninteractiveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			foreach (var ca in GetSelectedMergeableItems())
+			using (new Waiter(this))
 			{
-				try
+				foreach (var ca in GetSelectedMergeableItems())
 				{
-					SvnAutoMerge(ca);
+					try
+					{
+						SvnAutoMerge(ca);
+					}
+					catch (Exception ex)
+					{
+						ca.Status = Status.Error;
+						ca.MergedPath = null;
+						ca.StatusDetails = ex.Message;
+					}
 				}
-				catch (Exception ex)
-				{
-					ca.Status = Status.Error;
-					ca.MergedPath = null;
-					ca.StatusDetails = ex.Message;
-				}
-			}
 
-			listViewChanged.Refresh();
+				listViewChanged.Refresh();
+			}
 		}
 
 		void SvnAutoMerge(VssChangeAtom ca)
@@ -1110,31 +1068,7 @@ For merge will be used mine base.
 		{
 			foreach (var ca in GetSelectedMergeableItems())
 			{
-				if (_mergeDestination != null)
-				{
-					if (ca.MergedPath != null)
-					{
-						File.Delete(ca.MergedPath);
-					}
-				}
-				else
-				{
-					try
-					{
-						var item = _mineVss.VSSItem[ca.Spec];
-						item.UndoCheckout();
-
-					}
-					catch (Exception ex)
-					{
-						if (MessageBox.Show("Item " + ca.Spec + " error:\n" + ex.Message, "Error", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-							return;
-					}
-				}
-
-				ca.MergedPath = null;
-				ca.Status = Status.Nothing;
-				ca.StatusDetails = null;
+				_driver.Reset(ca);
 			}
 			listViewChanged.Refresh();
 		}
@@ -1209,18 +1143,21 @@ For merge will be used mine base.
 
 		void buttonFindJournal_Click(object sender, EventArgs e)
 		{
-			var ssIniPath = GetIniPath(textBoxVssIniTheirs.Text, "'theirs'");
-			if (ssIniPath == null)
-				return;
+			using (new Waiter(this))
+			{
+				var ssIniPath = GetIniPath(textBoxVssIniTheirs.Text, "'theirs'");
+				if (ssIniPath == null)
+					return;
 
-			// find journal file:
-			textBoxJournal.Text = File.ReadAllLines(ssIniPath)
-				.Select(l => l.Trim().ToLowerInvariant())
-				.Where(l => l.StartsWith("journal_file"))
-				.Select(l => l.Substring(l.IndexOf('=') + 1).Trim())
-				.FirstOrDefault()
-			;
-			Settings.Default.Save();
+				// find journal file:
+				textBoxJournal.Text = File.ReadAllLines(ssIniPath)
+					.Select(l => l.Trim().ToLowerInvariant())
+					.Where(l => l.StartsWith("journal_file"))
+					.Select(l => l.Substring(l.IndexOf('=') + 1).Trim())
+					.FirstOrDefault()
+				;
+				Settings.Default.Save();
+			}
 		}
 
 		void buttonParseJournal_Click(object sender, EventArgs e)
@@ -1233,52 +1170,56 @@ For merge will be used mine base.
 
 			Settings.Default.Save();
 
-			var journals = textBoxJournal.Text.Split(';');
+			using (new Waiter(this))
+			{
+				var journals = textBoxJournal.Text.Split(';');
 
-			var nodes = new VssJournalPlayer().Play(journals);
+				var nodes = new VssJournalPlayer().Play(journals);
 
-			var str = nodes
-				.Aggregate(new StringBuilder(), (sb, n) => {
-
-					sb.AppendFormat("{0}	{1}", n.Spec, n.FirstChange);
-					if (!n.IsPureModified)
+				var str = nodes
+					.Aggregate(new StringBuilder(), (sb, n) =>
 					{
-						sb.AppendFormat("	");
 
-						if (n.IsAdded)
-							sb.AppendFormat(" added");
-						if (n.IsArchived)
-							sb.AppendFormat(" archived");
-						if (n.IsBranched)
-							sb.AppendFormat(" branched");
-						if (n.IsDeleted)
+						sb.AppendFormat("{0}	{1}", n.Spec, n.FirstChange);
+						if (!n.IsPureModified)
 						{
-							if (n.IsDeletedByMove)
-								sb.AppendFormat(" deleted_by_move");
-							else
-								sb.AppendFormat(" deleted");
+							sb.AppendFormat("	");
+
+							if (n.IsAdded)
+								sb.AppendFormat(" added");
+							if (n.IsArchived)
+								sb.AppendFormat(" archived");
+							if (n.IsBranched)
+								sb.AppendFormat(" branched");
+							if (n.IsDeleted)
+							{
+								if (n.IsDeletedByMove)
+									sb.AppendFormat(" deleted_by_move");
+								else
+									sb.AppendFormat(" deleted");
+							}
+							if (n.IsModified)
+								sb.AppendFormat(" modified");
+							if (n.IsRecovered)
+								sb.AppendFormat(" recovered");
+							if (n.IsRolledback)
+								sb.AppendFormat(" rolledback");
+							if (n.MovedFrom != null)
+								sb.AppendFormat(" moved_from({0})", n.MovedFrom);
+							if (n.SharedFrom != null)
+								sb.AppendFormat(" shared_from({0})", n.SharedFrom);
+							if (n.CopiedFrom != null)
+								sb.AppendFormat(" copied_from({0})", n.CopiedFrom);
 						}
-						if (n.IsModified)
-							sb.AppendFormat(" modified");
-						if (n.IsRecovered)
-							sb.AppendFormat(" recovered");
-						if (n.IsRolledback)
-							sb.AppendFormat(" rolledback");
-						if (n.MovedFrom != null)
-							sb.AppendFormat(" moved_from({0})", n.MovedFrom);
-						if (n.SharedFrom != null)
-							sb.AppendFormat(" shared_from({0})", n.SharedFrom);
-						if (n.CopiedFrom != null)
-							sb.AppendFormat(" copied_from({0})", n.CopiedFrom);
-					}
 
-					sb.AppendFormat("\r\n");
+						sb.AppendFormat("\r\n");
 
-					return sb;
-				})
-			;
+						return sb;
+					})
+				;
 
-			textBoxForMergeUnparsedList.Text = str.ToString();
+				textBoxForMergeUnparsedList.Text = str.ToString();
+			}
 		}
 
 		void textBoxForMergeUnparsedList_KeyDown(object sender, KeyEventArgs e)
@@ -1505,6 +1446,31 @@ For merge will be used mine base.
 			}
 
 			listViewChanged.Refresh();
+		}
+
+		public void NotifyError(string message, string spec, string hint)
+		{
+			if (!_bulkOperation)
+			{
+				ShowError(message, spec, hint);
+			}
+			else
+			{
+				AddLog(string.Format("\r\nError: '{0}' on {1}\r\n	{2}", spec, hint, message));
+			}
+		}
+
+		public DialogResult GetConfirmation(string message, string spec, string hints, MessageBoxButtons requestedButtons, MessageBoxDefaultButton defaultButton)
+		{
+			throw new NotImplementedException();
+		}
+
+		void Vss3WayMerge_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				Close();
+			}
 		}
 	}
 }

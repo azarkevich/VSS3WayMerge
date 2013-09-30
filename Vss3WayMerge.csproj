@@ -41,6 +41,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>packages\Rx-Core.2.1.30214.0\lib\Net40\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>packages\Rx-Interfaces.2.1.30214.0\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,10 +57,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drivers\DetachedDriver.cs" />
+    <Compile Include="Drivers\VssDriver.cs" />
     <Compile Include="ICLRRuntimeInfo.cs" />
+    <Compile Include="Interfaces\IErrorNotification.cs" />
+    <Compile Include="Interfaces\IMergeDestinationDriver.cs" />
     <Compile Include="MergerToolDefinition.cs" />
     <Compile Include="MergerToolsManager.cs" />
     <Compile Include="Status.cs" />
+    <Compile Include="Tools\CancellableWait.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\CancellableWait.Designer.cs">
+      <DependentUpon>CancellableWait.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Extensions.cs" />
+    <Compile Include="Tools\Waiter.cs" />
     <Compile Include="VJP\JournalParser.cs" />
     <Compile Include="VJP\VssChangeType.cs" />
     <Compile Include="VJP\VssFileInfo.cs" />
@@ -69,6 +87,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Tools\CancellableWait.resx">
+      <DependentUpon>CancellableWait.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Vss3WayMerge.resx">
       <DependentUpon>Vss3WayMerge.cs</DependentUpon>
     </EmbeddedResource>
@@ -92,6 +113,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="SourceSafeTypeLib">
