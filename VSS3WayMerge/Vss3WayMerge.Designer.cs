@@ -34,11 +34,22 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tabPageForMergeFiles = new System.Windows.Forms.TabPage();
+			this.radioButtonVssConnected = new System.Windows.Forms.RadioButton();
 			this.textBoxJournal = new System.Windows.Forms.TextBox();
+			this.radioButtonDetached = new System.Windows.Forms.RadioButton();
 			this.buttonFindJournal = new System.Windows.Forms.Button();
 			this.buttonParseForMergeList = new System.Windows.Forms.Button();
+			this.textBoxDetachedMergeDestination = new System.Windows.Forms.TextBox();
 			this.buttonParseJournal = new System.Windows.Forms.Button();
+			this.textBoxTheirsPwd = new System.Windows.Forms.TextBox();
 			this.textBoxForMergeUnparsedList = new System.Windows.Forms.TextBox();
+			this.textBoxTheirsUser = new System.Windows.Forms.TextBox();
+			this.textBoxVssIniTheirs = new System.Windows.Forms.TextBox();
+			this.textBoxMinePwd = new System.Windows.Forms.TextBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.textBoxMineUser = new System.Windows.Forms.TextBox();
+			this.textBoxVssIniMine = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
 			this.tabPageDiffs = new System.Windows.Forms.TabPage();
 			this.listViewChanged = new System.Windows.Forms.ListView();
 			this.colDiffSpec = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -90,17 +101,6 @@
 			this.label8 = new System.Windows.Forms.Label();
 			this.comboBoxMerger = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
-			this.textBoxDetachedMergeDestination = new System.Windows.Forms.TextBox();
-			this.textBoxTheirsPwd = new System.Windows.Forms.TextBox();
-			this.textBoxTheirsUser = new System.Windows.Forms.TextBox();
-			this.textBoxMinePwd = new System.Windows.Forms.TextBox();
-			this.textBoxMineUser = new System.Windows.Forms.TextBox();
-			this.textBoxVssIniTheirs = new System.Windows.Forms.TextBox();
-			this.textBoxVssIniMine = new System.Windows.Forms.TextBox();
-			this.radioButtonDetached = new System.Windows.Forms.RadioButton();
-			this.radioButtonVssConnected = new System.Windows.Forms.RadioButton();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.tabControl.SuspendLayout();
 			this.tabPageForMergeFiles.SuspendLayout();
@@ -139,7 +139,7 @@
 			this.tabControl.Name = "tabControl";
 			this.tabControl.SelectedIndex = 0;
 			this.tabControl.Size = new System.Drawing.Size(1063, 531);
-			this.tabControl.TabIndex = 11;
+			this.tabControl.TabIndex = 0;
 			// 
 			// tabPageForMergeFiles
 			// 
@@ -169,22 +169,48 @@
 			this.tabPageForMergeFiles.TabIndex = 4;
 			this.tabPageForMergeFiles.Text = "Files for merge";
 			// 
+			// radioButtonVssConnected
+			// 
+			this.radioButtonVssConnected.AutoSize = true;
+			this.radioButtonVssConnected.Checked = true;
+			this.radioButtonVssConnected.ForeColor = System.Drawing.Color.Red;
+			this.radioButtonVssConnected.Location = new System.Drawing.Point(108, 31);
+			this.radioButtonVssConnected.Name = "radioButtonVssConnected";
+			this.radioButtonVssConnected.Size = new System.Drawing.Size(150, 17);
+			this.radioButtonVssConnected.TabIndex = 10;
+			this.radioButtonVssConnected.TabStop = true;
+			this.radioButtonVssConnected.Text = "VSS Connect (Warning !!!)";
+			this.toolTip.SetToolTip(this.radioButtonVssConnected, resources.GetString("radioButtonVssConnected.ToolTip"));
+			this.radioButtonVssConnected.UseVisualStyleBackColor = true;
+			// 
 			// textBoxJournal
 			// 
 			this.textBoxJournal.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssJournalFiles", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
 			this.textBoxJournal.Location = new System.Drawing.Point(110, 56);
 			this.textBoxJournal.Name = "textBoxJournal";
 			this.textBoxJournal.Size = new System.Drawing.Size(379, 20);
-			this.textBoxJournal.TabIndex = 2;
+			this.textBoxJournal.TabIndex = 14;
 			this.textBoxJournal.Text = global::Vss3WayMerge.Properties.Settings.Default.VssJournalFiles;
 			this.toolTip.SetToolTip(this.textBoxJournal, "One or mode journal files for parse.\r\n\r\nSeparator ;");
+			// 
+			// radioButtonDetached
+			// 
+			this.radioButtonDetached.AutoSize = true;
+			this.radioButtonDetached.Location = new System.Drawing.Point(264, 31);
+			this.radioButtonDetached.Name = "radioButtonDetached";
+			this.radioButtonDetached.Size = new System.Drawing.Size(72, 17);
+			this.radioButtonDetached.TabIndex = 11;
+			this.radioButtonDetached.Text = "Detached";
+			this.toolTip.SetToolTip(this.radioButtonDetached, "Detached mode.\r\n\r\nMerged files will be stored on disk with specified root.\r\n\r\nAft" +
+        "er utility work this files can be loaded to VSS");
+			this.radioButtonDetached.UseVisualStyleBackColor = true;
 			// 
 			// buttonFindJournal
 			// 
 			this.buttonFindJournal.Location = new System.Drawing.Point(8, 54);
 			this.buttonFindJournal.Name = "buttonFindJournal";
 			this.buttonFindJournal.Size = new System.Drawing.Size(96, 23);
-			this.buttonFindJournal.TabIndex = 1;
+			this.buttonFindJournal.TabIndex = 13;
 			this.buttonFindJournal.Text = "Find journal =>";
 			this.toolTip.SetToolTip(this.buttonFindJournal, "Find journal file in \'theirs\' VSS database");
 			this.buttonFindJournal.UseVisualStyleBackColor = true;
@@ -196,23 +222,44 @@
 			this.buttonParseForMergeList.Location = new System.Drawing.Point(8, 476);
 			this.buttonParseForMergeList.Name = "buttonParseForMergeList";
 			this.buttonParseForMergeList.Size = new System.Drawing.Size(114, 23);
-			this.buttonParseForMergeList.TabIndex = 4;
+			this.buttonParseForMergeList.TabIndex = 17;
 			this.buttonParseForMergeList.Text = "Parse list ...";
 			this.toolTip.SetToolTip(this.buttonParseForMergeList, "Parse serialized differences definitions and load them to \'Differences\' tab for f" +
         "uture work");
 			this.buttonParseForMergeList.UseVisualStyleBackColor = true;
 			this.buttonParseForMergeList.Click += new System.EventHandler(this.buttonParseForMergeList_Click);
 			// 
+			// textBoxDetachedMergeDestination
+			// 
+			this.textBoxDetachedMergeDestination.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "DetachedMergeDestination", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBoxDetachedMergeDestination.Location = new System.Drawing.Point(342, 30);
+			this.textBoxDetachedMergeDestination.Name = "textBoxDetachedMergeDestination";
+			this.textBoxDetachedMergeDestination.Size = new System.Drawing.Size(250, 20);
+			this.textBoxDetachedMergeDestination.TabIndex = 12;
+			this.textBoxDetachedMergeDestination.Text = global::Vss3WayMerge.Properties.Settings.Default.DetachedMergeDestination;
+			this.toolTip.SetToolTip(this.textBoxDetachedMergeDestination, "Merged results root. Directory will be created.\r\n\r\nExisting directory will not be" +
+        " cleaned up.");
+			// 
 			// buttonParseJournal
 			// 
 			this.buttonParseJournal.Location = new System.Drawing.Point(495, 54);
 			this.buttonParseJournal.Name = "buttonParseJournal";
 			this.buttonParseJournal.Size = new System.Drawing.Size(114, 23);
-			this.buttonParseJournal.TabIndex = 3;
+			this.buttonParseJournal.TabIndex = 15;
 			this.buttonParseJournal.Text = "Parse journal(s) ...";
 			this.toolTip.SetToolTip(this.buttonParseJournal, "Parse journal files and produce serialized differences definitions");
 			this.buttonParseJournal.UseVisualStyleBackColor = true;
 			this.buttonParseJournal.Click += new System.EventHandler(this.buttonParseJournal_Click);
+			// 
+			// textBoxTheirsPwd
+			// 
+			this.textBoxTheirsPwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBoxTheirsPwd.Location = new System.Drawing.Point(526, 6);
+			this.textBoxTheirsPwd.Name = "textBoxTheirsPwd";
+			this.textBoxTheirsPwd.PasswordChar = '*';
+			this.textBoxTheirsPwd.Size = new System.Drawing.Size(43, 20);
+			this.textBoxTheirsPwd.TabIndex = 4;
+			this.textBoxTheirsPwd.Text = global::Vss3WayMerge.Properties.Settings.Default.vssTheirsPassword;
 			// 
 			// textBoxForMergeUnparsedList
 			// 
@@ -225,8 +272,79 @@
 			this.textBoxForMergeUnparsedList.Name = "textBoxForMergeUnparsedList";
 			this.textBoxForMergeUnparsedList.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.textBoxForMergeUnparsedList.Size = new System.Drawing.Size(1043, 387);
-			this.textBoxForMergeUnparsedList.TabIndex = 0;
+			this.textBoxForMergeUnparsedList.TabIndex = 16;
 			this.textBoxForMergeUnparsedList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxForMergeUnparsedList_KeyDown);
+			// 
+			// textBoxTheirsUser
+			// 
+			this.textBoxTheirsUser.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBoxTheirsUser.Location = new System.Drawing.Point(464, 6);
+			this.textBoxTheirsUser.Name = "textBoxTheirsUser";
+			this.textBoxTheirsUser.Size = new System.Drawing.Size(56, 20);
+			this.textBoxTheirsUser.TabIndex = 3;
+			this.textBoxTheirsUser.Text = global::Vss3WayMerge.Properties.Settings.Default.vssTheirsUser;
+			// 
+			// textBoxVssIniTheirs
+			// 
+			this.textBoxVssIniTheirs.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssTheirs", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBoxVssIniTheirs.Location = new System.Drawing.Point(108, 6);
+			this.textBoxVssIniTheirs.Name = "textBoxVssIniTheirs";
+			this.textBoxVssIniTheirs.Size = new System.Drawing.Size(257, 20);
+			this.textBoxVssIniTheirs.TabIndex = 1;
+			this.textBoxVssIniTheirs.Text = global::Vss3WayMerge.Properties.Settings.Default.VssTheirs;
+			this.toolTip.SetToolTip(this.textBoxVssIniTheirs, "VSS database path.\r\n\r\nThis VSS contains changes which will be applied.");
+			// 
+			// textBoxMinePwd
+			// 
+			this.textBoxMinePwd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxMinePwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssMinePassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBoxMinePwd.Location = new System.Drawing.Point(1008, 6);
+			this.textBoxMinePwd.Name = "textBoxMinePwd";
+			this.textBoxMinePwd.PasswordChar = '*';
+			this.textBoxMinePwd.Size = new System.Drawing.Size(41, 20);
+			this.textBoxMinePwd.TabIndex = 8;
+			this.textBoxMinePwd.Text = global::Vss3WayMerge.Properties.Settings.Default.vssMinePassword;
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(5, 33);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(94, 13);
+			this.label6.TabIndex = 9;
+			this.label6.Text = "Merge destination:";
+			// 
+			// textBoxMineUser
+			// 
+			this.textBoxMineUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxMineUser.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssMineUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBoxMineUser.Location = new System.Drawing.Point(945, 6);
+			this.textBoxMineUser.Name = "textBoxMineUser";
+			this.textBoxMineUser.Size = new System.Drawing.Size(57, 20);
+			this.textBoxMineUser.TabIndex = 7;
+			this.textBoxMineUser.Text = global::Vss3WayMerge.Properties.Settings.Default.vssMineUser;
+			// 
+			// textBoxVssIniMine
+			// 
+			this.textBoxVssIniMine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxVssIniMine.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssMine", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBoxVssIniMine.Location = new System.Drawing.Point(689, 6);
+			this.textBoxVssIniMine.Name = "textBoxVssIniMine";
+			this.textBoxVssIniMine.Size = new System.Drawing.Size(250, 20);
+			this.textBoxVssIniMine.TabIndex = 6;
+			this.textBoxVssIniMine.Text = global::Vss3WayMerge.Properties.Settings.Default.VssMine;
+			this.toolTip.SetToolTip(this.textBoxVssIniMine, "VSS database path.\r\n\r\nThis VSS will be modified for accept changes from \'theirs\'." +
+        "");
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(371, 9);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(87, 13);
+			this.label5.TabIndex = 2;
+			this.label5.Text = "User + Password";
 			// 
 			// tabPageDiffs
 			// 
@@ -534,7 +652,7 @@
 			this.tabPageLog.Location = new System.Drawing.Point(4, 22);
 			this.tabPageLog.Name = "tabPageLog";
 			this.tabPageLog.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageLog.Size = new System.Drawing.Size(1031, 429);
+			this.tabPageLog.Size = new System.Drawing.Size(1055, 505);
 			this.tabPageLog.TabIndex = 0;
 			this.tabPageLog.Text = "Log";
 			this.tabPageLog.UseVisualStyleBackColor = true;
@@ -546,7 +664,7 @@
 			this.textBoxLog.Multiline = true;
 			this.textBoxLog.Name = "textBoxLog";
 			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBoxLog.Size = new System.Drawing.Size(1025, 423);
+			this.textBoxLog.Size = new System.Drawing.Size(1049, 499);
 			this.textBoxLog.TabIndex = 0;
 			// 
 			// tabPageOprions
@@ -564,7 +682,7 @@
 			this.tabPageOprions.Location = new System.Drawing.Point(4, 22);
 			this.tabPageOprions.Name = "tabPageOprions";
 			this.tabPageOprions.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageOprions.Size = new System.Drawing.Size(1031, 429);
+			this.tabPageOprions.Size = new System.Drawing.Size(1055, 505);
 			this.tabPageOprions.TabIndex = 3;
 			this.tabPageOprions.Text = "Options";
 			this.tabPageOprions.UseVisualStyleBackColor = true;
@@ -660,124 +778,6 @@
 			this.label7.Size = new System.Drawing.Size(64, 13);
 			this.label7.TabIndex = 0;
 			this.label7.Text = "Merge Tool:";
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(371, 9);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(87, 13);
-			this.label5.TabIndex = 2;
-			this.label5.Text = "User + Password";
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(5, 33);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(94, 13);
-			this.label6.TabIndex = 9;
-			this.label6.Text = "Merge destination:";
-			// 
-			// textBoxDetachedMergeDestination
-			// 
-			this.textBoxDetachedMergeDestination.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "DetachedMergeDestination", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxDetachedMergeDestination.Location = new System.Drawing.Point(342, 30);
-			this.textBoxDetachedMergeDestination.Name = "textBoxDetachedMergeDestination";
-			this.textBoxDetachedMergeDestination.Size = new System.Drawing.Size(250, 20);
-			this.textBoxDetachedMergeDestination.TabIndex = 10;
-			this.textBoxDetachedMergeDestination.Text = global::Vss3WayMerge.Properties.Settings.Default.DetachedMergeDestination;
-			this.toolTip.SetToolTip(this.textBoxDetachedMergeDestination, "Merged results root. Directory will be created.\r\n\r\nExisting directory will not be" +
-        " cleaned up.");
-			// 
-			// textBoxTheirsPwd
-			// 
-			this.textBoxTheirsPwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxTheirsPwd.Location = new System.Drawing.Point(526, 6);
-			this.textBoxTheirsPwd.Name = "textBoxTheirsPwd";
-			this.textBoxTheirsPwd.PasswordChar = '*';
-			this.textBoxTheirsPwd.Size = new System.Drawing.Size(43, 20);
-			this.textBoxTheirsPwd.TabIndex = 4;
-			this.textBoxTheirsPwd.Text = global::Vss3WayMerge.Properties.Settings.Default.vssTheirsPassword;
-			// 
-			// textBoxTheirsUser
-			// 
-			this.textBoxTheirsUser.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxTheirsUser.Location = new System.Drawing.Point(464, 6);
-			this.textBoxTheirsUser.Name = "textBoxTheirsUser";
-			this.textBoxTheirsUser.Size = new System.Drawing.Size(56, 20);
-			this.textBoxTheirsUser.TabIndex = 3;
-			this.textBoxTheirsUser.Text = global::Vss3WayMerge.Properties.Settings.Default.vssTheirsUser;
-			// 
-			// textBoxMinePwd
-			// 
-			this.textBoxMinePwd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxMinePwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssMinePassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxMinePwd.Location = new System.Drawing.Point(1008, 6);
-			this.textBoxMinePwd.Name = "textBoxMinePwd";
-			this.textBoxMinePwd.PasswordChar = '*';
-			this.textBoxMinePwd.Size = new System.Drawing.Size(41, 20);
-			this.textBoxMinePwd.TabIndex = 8;
-			this.textBoxMinePwd.Text = global::Vss3WayMerge.Properties.Settings.Default.vssMinePassword;
-			// 
-			// textBoxMineUser
-			// 
-			this.textBoxMineUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxMineUser.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssMineUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxMineUser.Location = new System.Drawing.Point(945, 6);
-			this.textBoxMineUser.Name = "textBoxMineUser";
-			this.textBoxMineUser.Size = new System.Drawing.Size(57, 20);
-			this.textBoxMineUser.TabIndex = 7;
-			this.textBoxMineUser.Text = global::Vss3WayMerge.Properties.Settings.Default.vssMineUser;
-			// 
-			// textBoxVssIniTheirs
-			// 
-			this.textBoxVssIniTheirs.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssTheirs", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxVssIniTheirs.Location = new System.Drawing.Point(108, 6);
-			this.textBoxVssIniTheirs.Name = "textBoxVssIniTheirs";
-			this.textBoxVssIniTheirs.Size = new System.Drawing.Size(257, 20);
-			this.textBoxVssIniTheirs.TabIndex = 1;
-			this.textBoxVssIniTheirs.Text = global::Vss3WayMerge.Properties.Settings.Default.VssTheirs;
-			this.toolTip.SetToolTip(this.textBoxVssIniTheirs, "VSS database path.\r\n\r\nThis VSS contains changes which will be applied.");
-			// 
-			// textBoxVssIniMine
-			// 
-			this.textBoxVssIniMine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxVssIniMine.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssMine", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxVssIniMine.Location = new System.Drawing.Point(689, 6);
-			this.textBoxVssIniMine.Name = "textBoxVssIniMine";
-			this.textBoxVssIniMine.Size = new System.Drawing.Size(250, 20);
-			this.textBoxVssIniMine.TabIndex = 6;
-			this.textBoxVssIniMine.Text = global::Vss3WayMerge.Properties.Settings.Default.VssMine;
-			this.toolTip.SetToolTip(this.textBoxVssIniMine, "VSS database path.\r\n\r\nThis VSS will be modified for accept changes from \'theirs\'." +
-        "");
-			// 
-			// radioButtonDetached
-			// 
-			this.radioButtonDetached.AutoSize = true;
-			this.radioButtonDetached.Location = new System.Drawing.Point(264, 31);
-			this.radioButtonDetached.Name = "radioButtonDetached";
-			this.radioButtonDetached.Size = new System.Drawing.Size(72, 17);
-			this.radioButtonDetached.TabIndex = 12;
-			this.radioButtonDetached.Text = "Detached";
-			this.toolTip.SetToolTip(this.radioButtonDetached, "Detached mode.\r\n\r\nMerged files will be stored on disk with specified root.\r\n\r\nAft" +
-        "er utility work this files can be loaded to VSS");
-			this.radioButtonDetached.UseVisualStyleBackColor = true;
-			// 
-			// radioButtonVssConnected
-			// 
-			this.radioButtonVssConnected.AutoSize = true;
-			this.radioButtonVssConnected.Checked = true;
-			this.radioButtonVssConnected.ForeColor = System.Drawing.Color.Red;
-			this.radioButtonVssConnected.Location = new System.Drawing.Point(108, 31);
-			this.radioButtonVssConnected.Name = "radioButtonVssConnected";
-			this.radioButtonVssConnected.Size = new System.Drawing.Size(150, 17);
-			this.radioButtonVssConnected.TabIndex = 12;
-			this.radioButtonVssConnected.TabStop = true;
-			this.radioButtonVssConnected.Text = "VSS Connect (Warning !!!)";
-			this.toolTip.SetToolTip(this.radioButtonVssConnected, resources.GetString("radioButtonVssConnected.ToolTip"));
-			this.radioButtonVssConnected.UseVisualStyleBackColor = true;
 			// 
 			// toolTip
 			// 
