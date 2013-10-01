@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vss3WayMerge", "Vss3WayMerge.csproj", "{95553517-6300-495F-ACDE-A446500D2DDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vss3WayMerge", "Vss3WayMerge\Vss3WayMerge.csproj", "{95553517-6300-495F-ACDE-A446500D2DDB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1B5E0EE5-5165-4D8B-8721-C2003A074EAC}"
 	ProjectSection(SolutionItems) = preProject
