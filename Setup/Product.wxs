@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	
+	<Product Id="*" Name="VSS 3-Way Merge Tool" Language="1033" Version="1.0.0.0" Manufacturer="Sergey Azarkevich" UpgradeCode="964146f1-7f8b-4537-8296-41467fc153cc">
+
+		<Package Id='*' Keywords='Installer' Description="VSS 3-Way merge helper tool"
+			InstallerVersion="200" Compressed="yes" InstallScope="perMachine"
+			Manufacturer="Sergey Azarkevich"
+		/>
+
+		<MediaTemplate EmbedCab="yes" />
+		
+		<Feature Id="MergeTool" Title="VSS 3-Way Merge Tool" Level="1">
+			<ComponentRef Id='MainExecutable' />
+			<ComponentRef Id='SharpSvn' />
+			<ComponentRef Id='SystemReactive' />
+		</Feature>
+
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+			<Directory Id="DesktopFolder" Name="Desktop" />
+			
+			<Directory Id='ProgramFilesFolder' Name='PFiles'>
+				<Directory Id='Acme' Name='Acme'>
+					<Directory Id='INSTALLDIR' Name='Foobar 1.0'>
+						<Component Id='MainExecutable' Guid='A7EA870A-88F1-4E88-8DD4-FB4BDD712946'>
+
+							<File Id='Vss3WayMerge.exe' Name='Vss3WayMerge.exe' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\Vss3WayMerge.exe' KeyPath='yes'>
+								<Shortcut Id='Vss3WayMerge_lnk' Name='VSS 3-Way Merge Tool' Directory='DesktopFolder' Advertise='yes'>
+									
+									<Icon Id="Icon.exe" SourceFile="$(var.Vss3WayMerge.TargetDir)Vss3WayMerge.exe" />
+									
+								</Shortcut>
+
+							</File>
+							
+							<File Id='Vss3WayMerge.exe.config' Name='Vss3WayMerge.exe.config' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\Vss3WayMerge.exe.config' />
+							
+						</Component>
+						
+						<Component Id='SharpSvn' Guid='AC9F5C98-865D-4D9E-9636-1500AD529B6B'>
+
+							<File Id='SharpSvn.dll' Name='SharpSvn.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\SharpSvn.dll' KeyPath='yes' />
+
+						</Component>
+
+						<Component Id='SystemReactive' Guid='B994CF55-C67A-4801-8619-CE65EC87ADEC'>
+
+							<File Id='System.Reactive.Core' Name='System.Reactive.Core.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\System.Reactive.Core.dll' KeyPath='yes' />
+
+							<File Id='System.Reactive.Interfaces' Name='System.Reactive.Interfaces.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\System.Reactive.Interfaces.dll' />
+
+						</Component>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Product>
+
+</Wix>
