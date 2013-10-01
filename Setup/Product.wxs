@@ -20,37 +20,35 @@
 			<Directory Id="DesktopFolder" Name="Desktop" />
 			
 			<Directory Id='ProgramFilesFolder' Name='PFiles'>
-				<Directory Id='Acme' Name='Acme'>
-					<Directory Id='INSTALLDIR' Name='Foobar 1.0'>
-						<Component Id='MainExecutable' Guid='A7EA870A-88F1-4E88-8DD4-FB4BDD712946'>
+				<Directory Id='INSTALLDIR' Name='VSS3WayMerger'>
+					<Component Id='MainExecutable' Guid='A7EA870A-88F1-4E88-8DD4-FB4BDD712946'>
 
-							<File Id='Vss3WayMerge.exe' Name='Vss3WayMerge.exe' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\Vss3WayMerge.exe' KeyPath='yes'>
-								<Shortcut Id='Vss3WayMerge_lnk' Name='VSS 3-Way Merge Tool' Directory='DesktopFolder' Advertise='yes'>
+						<File Id='Vss3WayMerge.exe' Name='Vss3WayMerge.exe' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\Vss3WayMerge.exe' KeyPath='yes'>
+							<Shortcut Id='Vss3WayMerge_lnk' Name='VSS 3-Way Merge Tool' Directory='DesktopFolder' Advertise='yes'>
 									
-									<Icon Id="Icon.exe" SourceFile="$(var.Vss3WayMerge.TargetDir)Vss3WayMerge.exe" />
+								<Icon Id="Icon.exe" SourceFile="$(var.Vss3WayMerge.TargetDir)Vss3WayMerge.exe" />
 									
-								</Shortcut>
+							</Shortcut>
 
-							</File>
+						</File>
 							
-							<File Id='Vss3WayMerge.exe.config' Name='Vss3WayMerge.exe.config' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\Vss3WayMerge.exe.config' />
+						<File Id='Vss3WayMerge.exe.config' Name='Vss3WayMerge.exe.config' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\Vss3WayMerge.exe.config' />
 							
-						</Component>
+					</Component>
 						
-						<Component Id='SharpSvn' Guid='AC9F5C98-865D-4D9E-9636-1500AD529B6B'>
+					<Component Id='SharpSvn' Guid='AC9F5C98-865D-4D9E-9636-1500AD529B6B'>
 
-							<File Id='SharpSvn.dll' Name='SharpSvn.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\SharpSvn.dll' KeyPath='yes' />
+						<File Id='SharpSvn.dll' Name='SharpSvn.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\SharpSvn.dll' KeyPath='yes' />
 
-						</Component>
+					</Component>
 
-						<Component Id='SystemReactive' Guid='B994CF55-C67A-4801-8619-CE65EC87ADEC'>
+					<Component Id='SystemReactive' Guid='B994CF55-C67A-4801-8619-CE65EC87ADEC'>
 
-							<File Id='System.Reactive.Core' Name='System.Reactive.Core.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\System.Reactive.Core.dll' KeyPath='yes' />
+						<File Id='System.Reactive.Core' Name='System.Reactive.Core.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\System.Reactive.Core.dll' KeyPath='yes' />
 
-							<File Id='System.Reactive.Interfaces' Name='System.Reactive.Interfaces.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\System.Reactive.Interfaces.dll' />
+						<File Id='System.Reactive.Interfaces' Name='System.Reactive.Interfaces.dll' DiskId='1' Source='$(var.Vss3WayMerge.TargetDir)\System.Reactive.Interfaces.dll' />
 
-						</Component>
-					</Directory>
+					</Component>
 				</Directory>
 			</Directory>
 		</Directory>
