@@ -23,6 +23,24 @@ namespace Vss3WayMerge
 {
 	public partial class Vss3WayMerge : Form, IErrorNotification
 	{
+		// ReSharper disable InconsistentNaming
+		// P/Invoke constants
+		const int WM_SYSCOMMAND = 0x112;
+		const int MF_STRING = 0x0;
+		const int MF_SEPARATOR = 0x800;
+
+		// ID for the About item on the system menu
+		const int SYSMENU_ABOUT_ID = 0x1;
+
+		// ReSharper restore InconsistentNaming
+
+		// P/Invoke declarations
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		private static extern bool AppendMenu(IntPtr hMenu, int uFlags, int uIDNewItem, string lpNewItem);
+
 		readonly string _tempDir;
 		readonly SHA1Managed _hash = new SHA1Managed();
 		IMergeDestinationDriver _driver;
@@ -31,24 +49,60 @@ namespace Vss3WayMerge
 		{
 			InitializeComponent();
 
-			_tempDir = Path.Combine(Path.GetTempPath(), "VSS3WayMerge");
+			var rootTempDir = Path.Combine(Path.GetTempPath(), "VSS3WayMerge");
+
+			_tempDir = Path.Combine(rootTempDir, Process.GetCurrentProcess().Id.ToString());
+
+			PrepareTemp(rootTempDir);
+		}
+
+		void PrepareTemp(string rootTempDir)
+		{
+			var thisProcessId = Process.GetCurrentProcess().Id;
 
 			// silently clear previous temp files
-			try
+			foreach (var fse in Directory.EnumerateFileSystemEntries(rootTempDir))
 			{
-				foreach (var fse in Directory.EnumerateFileSystemEntries(_tempDir, "*.*", SearchOption.AllDirectories))
+				try
 				{
-					if(File.Exists(fse))
+					if (File.Exists(fse))
+					{
 						File.SetAttributes(fse, FileAttributes.Normal);
+						File.Delete(fse);
+					}
+					else if (Directory.Exists(fse))
+					{
+						var dirName = Path.GetFileName(fse);
+						int id;
+						if (Int32.TryParse(dirName, out id) && id != thisProcessId)
+						{
+							// do not delete temp of already running instances
+							try
+							{
+								var p = Process.GetProcessById(id);
+								if (!p.HasExited)
+									continue;
+							}
+							catch
+							{
+							}
+						}
+
+						foreach (var subfse in Directory.EnumerateFileSystemEntries(fse, "*.*", SearchOption.AllDirectories))
+						{
+							if (File.Exists(subfse))
+								File.SetAttributes(subfse, FileAttributes.Normal);
+						}
+
+						Directory.Delete(fse, true);
+					}
 				}
-
-				Directory.Delete(_tempDir, true);
-			}
-			catch
-			{
+				catch
+				{
+				}
 			}
 
-			if(!Directory.Exists(_tempDir))
+			if (!Directory.Exists(_tempDir))
 				Directory.CreateDirectory(_tempDir);
 		}
 
@@ -686,74 +740,6 @@ For merge will be used mine base.
 			return false;
 		}
 
-		void checkoutMergeDestinationToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			return;
-			/*
-			foreach (ListViewItem selectedItem in listViewChanged.SelectedItems)
-			{
-				var ca = (selectedItem.Tag as VssChangeAtom);
-				if (ca == null)
-					continue;
-
-				try
-				{
-					var item = _mineVss.VSSItem[ca.Spec];
-
-					if (string.IsNullOrWhiteSpace(item.LocalSpec))
-					{
-						if (MessageBox.Show("Item " + ca.Spec + " has no assigned working copy. Checkout skipped.", "Warning", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-							return;
-					}
-					
-					if(item.IsCheckedOut == 0)
-						item.Checkout();
-
-					ca.MergedPath = item.LocalSpec;
-
-					ca.StatusDetails = "ChOut: " + item.LocalSpec;
-				}
-				catch (Exception ex)
-				{
-					if (MessageBox.Show("Item " + ca.Spec + " checkout error:\n" + ex.Message, "Error", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-						return;
-				}
-			}
-			 * */
-		}
-
-		void unDoCheckoutToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			/*
-			foreach (ListViewItem selectedItem in listViewChanged.SelectedItems)
-			{
-				var ca = (selectedItem.Tag as VssChangeAtom);
-				if (ca == null)
-					continue;
-
-				try
-				{
-					var item = _mineVss.VSSItem[ca.Spec];
-
-					if (item.IsCheckedOut == 0)
-						continue;
-
-					ca.MergedPath = null;
-
-					item.UndoCheckout();
-
-					selectedItem.SubItems[4].Text = "";
-					selectedItem.SubItems[5].Text = "";
-				}
-				catch (Exception ex)
-				{
-					if (MessageBox.Show("Item " + ca.Spec + " checkout error:\n" + ex.Message, "Error", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-						return;
-				}
-			}
-			 * */
-		}
-
 		void mergedDiffToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var ca = GetFocusedMergeableItem();
@@ -778,6 +764,15 @@ For merge will be used mine base.
 			{
 			}
 
+			// Get a handle to a copy of this form's system (window) menu
+			var hSysMenu = GetSystemMenu(this.Handle, false);
+
+			// Add a separator
+			AppendMenu(hSysMenu, MF_SEPARATOR, 0, string.Empty);
+
+			// Add the About menu item
+			AppendMenu(hSysMenu, MF_STRING, SYSMENU_ABOUT_ID, "&About");
+
 			comboBoxMerger.Items.Clear();
 			comboBoxMerger.Items.Add("Custom...");
 			foreach (var mtool in new MergerToolsManager().GetMergerTools())
@@ -786,6 +781,17 @@ For merge will be used mine base.
 			}
 			
 			comboBoxMerger.SelectedIndex = 1;
+		}
+
+		protected override void WndProc(ref Message m)
+		{
+			base.WndProc(ref m);
+
+			// Test if the About item was selected from the system menu
+			if ((m.Msg == WM_SYSCOMMAND) && ((int)m.WParam == SYSMENU_ABOUT_ID))
+			{
+				new AboutBox().Show(this);
+			}
 		}
 
 		void comboBoxMerger_SelectedIndexChanged(object sender, EventArgs e)

@@ -10,6 +10,7 @@
 			<ComponentRef Id="Vss3WayMerge.exe" />
 			<ComponentRef Id="SharpSvn" />
 			<ComponentRef Id="SystemReactive" />
+			<ComponentRef Id="build_info.txt" />
 		</Feature>
 		
 		<Directory Id="TARGETDIR" Name="SourceDir">
@@ -30,6 +31,10 @@
 					<Component Id="SystemReactive" Guid="B994CF55-C67A-4801-8619-CE65EC87ADEC">
 						<File Id="System.Reactive.Core" Name="System.Reactive.Core.dll" />
 						<File Id="System.Reactive.Interfaces" Name="System.Reactive.Interfaces.dll" />
+					</Component>
+
+					<Component Id="build_info.txt" Guid="ABDF9671-BD65-49DB-B8B0-B04D79E72ED8">
+						<File Id="build_info.txt" Source="$(var.Vss3WayMerge.ProjectDir)bin\build-info.txt" />
 					</Component>
 				</Directory>
 			</Directory>

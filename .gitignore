@@ -11,3 +11,4 @@
 
 *.DotSettings
 /packages/
+*.msi
