@@ -84,5 +84,10 @@ namespace Vss3WayMerge
 		}
 
 		#endregion
+
+		void okButton_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
 	}
 }
