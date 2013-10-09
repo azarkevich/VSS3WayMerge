@@ -57,5 +57,11 @@ Diff tab conatins list of changed files. Grayed files - unmergeable files and pr
 3. Also here is other useful diffs
 
 
- - Theirs diff - build patch file with theirs changes in selected files. Useful when some files in mine was moved to, say, Subversion. Patch file build with Subversion.
-
+ - Theirs diff as patch - build patch file with theirs changes in selected files. Useful when some files in mine was moved to, say, Subversion. Patch file build with Subversion.
+ - Theirs diff - difference produces in theirs version (base - theirs).
+ - Mine diff - difference produces in mine version (base - mine).
+ - Heads diff - compare lates version of files on both sides. This is what you see if try 2-way merge
+ - Bases diff - get base version of file from both VSS and compare. This files should be identical. Otherwise here is somwhere error in base version detection. This merge tool always check both base versions and warn you if they different, so you can do something.
+ 
+ 
+Some diffs allow compare many files at once. If 3 files selected, then they are joined into single file (with paddings between). This 'megafile' then comapred with 'megafile' from other side. This option allow to quick preview changes in many files at once. Say you suspect, that all files in this directory contains only unimportant changes which should be ignored. Then have a look at multi diff and ensure here is no significant changes. 
