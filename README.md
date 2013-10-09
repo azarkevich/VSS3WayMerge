@@ -3,6 +3,8 @@ VSS3WayMerge
 
 Tool for support merge two VSS databases with common ancestor.
 
+Disclaimer: this tool can perform merge only for files which was not moved, renamed, restored, archived, shared or branched. This is not implemented and will be never implemented due to big complexity (well.. unless someone paid for it).
+
 Why and when this tool can be used
 ------------
 VSS obviuously should not be used as VCS tool, but some unlucky peoples still use it.
