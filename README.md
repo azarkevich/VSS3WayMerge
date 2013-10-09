@@ -65,3 +65,10 @@ Diff tab conatins list of changed files. Grayed files - unmergeable files and pr
  
  
 Some diffs allow compare many files at once. If 3 files selected, then they are joined into single file (with paddings between). This 'megafile' then comapred with 'megafile' from other side. This option allow to quick preview changes in many files at once. Say you suspect, that all files in this directory contains only unimportant changes which should be ignored. Then have a look at multi diff and ensure here is no significant changes. 
+
+4. Merged diff - this is difference intent for apply to mine VSS. Good idea - check what will be checked in. Also this action can be performed from source safe application, as 'Difference' on cehckedout file
+5. Resolve as mine/theirs - get mine/theirs version as result of merge. When you get 'mine' version, then file not changed at all. If you select 'theirs' version, then latest version of file from branch will be used.
+6. Reset merged - remove merge destination/undo checkout. Then you can try merge again.
+7. Remove from list - useful for merge by small sets of changes. When you finish merge with part of changes (say one directory), you can remove this changes from list and start next chunk of work.
+8. Filters submenu allow filter files by filename (regex) or by selection. Useful for select and remove non-mergeable changes (dll, exe ...) or select set of files for work.
+9. More submenu contains stats calculator and allow copy 'preparsed' text to clipboard. You can save this text somwhere and then continue work from this state, remove merged lines when they complete.
