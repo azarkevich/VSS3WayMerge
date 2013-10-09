@@ -49,3 +49,13 @@ More details
 2. Tool require journal files only from 'theirs' database. This file parsed and appeared as easy editable list in text box. This 'preparsed' text can be edited. It's format: <file spec><tab><base version>[<tab><error>]. Files with optional 'error' string unable to merge. It is limitation of merge tool - moved, deleted and restored, archived, reverted, renamed, shared, branched files reckon as non-mergeable and should be merged manually.
 3. Select merge destination: 'VSS Connect' - destination files in 'mine' database will be checked out and edited by tool. If you have local modifications, they will be overwritten without confirmation! This is more conveniet way - after merge you should only fin all checkedout files and checkin them. Second choice - 'detached'. Specify directory where merged files will be stored (hierarchy will be preserved). After merge you should upload all files to 'mine' VSS. Merge not required - it is already done. But here is danger also - if someone edit file in 'mine' after it was merged, then simple upload will overwrite this changes. Deny changes in both VSS databases for merge time.
 4. Preparsed text should be parsed to list of changes. This list will be displayd on next tab.
+
+Diff tab conatins list of changed files. Grayed files - unmergeable files and present for remnd you about manual merge. In diff tab can be performed next actions:
+
+1. Main action - automatic merge. Select files and perform automatic merge. Unmergeable files will be ignored. Mergeable - get from VSS and merged with subversion merge algorithm (used SharpSvn assembly for this). Destination files will be checkedout if need. Conflicted and erroneous files marked in color.
+2. If you select single file, in menu appered '3-Way diff' item (if file was not merged) or '3-way merge' if file was merged. First allow see potential merge result, but here no merge destination. Secodn allow resolve conflicts, ensure and correct successfully merged files (merge destination present).
+3. Also here is other useful diffs
+
+
+ - Theirs diff - build patch file with theirs changes in selected files. Useful when some files in mine was moved to, say, Subversion. Patch file build with Subversion.
+
