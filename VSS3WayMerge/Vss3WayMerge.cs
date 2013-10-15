@@ -51,6 +51,9 @@ namespace Vss3WayMerge
 
 			var rootTempDir = Path.Combine(Path.GetTempPath(), "VSS3WayMerge");
 
+			if (!Directory.Exists(rootTempDir))
+				Directory.CreateDirectory(rootTempDir);
+
 			_tempDir = Path.Combine(rootTempDir, Process.GetCurrentProcess().Id.ToString());
 
 			PrepareTemp(rootTempDir);
