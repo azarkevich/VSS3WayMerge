@@ -1101,18 +1101,26 @@ For merge will be used mine base.
 
 				if (ca.TheirsHead != 0)
 				{
-					if (ca.TheirsHead == ca.BaseVersion)
-						sb.AppendFormat("* <- ");
-					else
-						sb.AppendFormat("{0} <- ", ca.TheirsHead);
+					// it is impossible have theirs without changes
+					Debug.Assert(ca.TheirsHead != ca.BaseVersion);
+					sb.AppendFormat("{0} <- ", ca.TheirsHead);
 				}
 				sb.AppendFormat("{0}", ca.BaseVersion);
+
+				var trivialDiff = false;
 				if (ca.MineHead != 0)
 				{
-					if(ca.MineHead == ca.BaseVersion)
+					if (ca.MineHead == ca.BaseVersion)
+					{
+						// trivial change (only in theirs)
 						sb.AppendFormat(" -> *");
+						sb.Insert(0, "T: ");
+						trivialDiff = true;
+					}
 					else
+					{
 						sb.AppendFormat(" -> {0}", ca.MineHead);
+					}
 				}
 
 				var foreColor = Color.Black;
@@ -1132,7 +1140,7 @@ For merge will be used mine base.
 						break;
 					case Status.Merged:
 						status = "Merged";
-						foreColor = Color.DarkGreen;
+						foreColor = trivialDiff ? Color.SteelBlue : Color.DarkGreen;
 						break;
 					case Status.MergedNoChanges:
 						status = "Merged, no changes";
