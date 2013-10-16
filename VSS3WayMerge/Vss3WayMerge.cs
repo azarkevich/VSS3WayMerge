@@ -1493,11 +1493,6 @@ For merge will be used mine base.
 			}
 		}
 
-		public DialogResult GetConfirmation(string message, string spec, string hints, MessageBoxButtons requestedButtons, MessageBoxDefaultButton defaultButton)
-		{
-			throw new NotImplementedException();
-		}
-
 		void Vss3WayMerge_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
 			if (e.KeyCode == Keys.Escape)
