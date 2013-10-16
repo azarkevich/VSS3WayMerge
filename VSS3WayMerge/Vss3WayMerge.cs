@@ -1494,6 +1494,10 @@ For merge will be used mine base.
 			{
 				Close();
 			}
+			if (e.KeyCode == Keys.Enter)
+			{
+				threeWayMergeToolStripMenuItem.PerformClick();
+			}
 		}
 	}
 }

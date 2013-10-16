@@ -13,4 +13,5 @@ msbuild Setup\Setup.wixproj /target:Clean /p:Configuration=Release
 msbuild VSS3WayMerge\Vss3WayMerge.csproj /target:Build /p:Configuration=Release
 msbuild Setup\Setup.wixproj /target:Build /p:Configuration=Release
 
-mv Setup\bin\Release\Setup.msi .
+rm Setup-*.msi
+mv Setup\bin\Release\Setup.msi .\Setup-VSS3WayMerge-0.9.x.msi
