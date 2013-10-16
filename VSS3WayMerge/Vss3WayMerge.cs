@@ -558,7 +558,7 @@ For merge will be used mine base.
 
 			if (ca != null && EnsureMine(ca) && EnsureTheirs(ca) && EnsureMineBase(ca) && EnsureTheirsBase(ca) && EnsureMergeDestination(ca))
 			{
-				if (StartMerger(ca.TheirsPath, ca.MinePath, ca.TheirsBasePath, ca.MergedPath))
+				if (Start3Diff(ca))
 				{
 					ca.Status = Status.Merged;
 					ca.StatusDetails = null;
@@ -579,22 +579,22 @@ For merge will be used mine base.
 				.ToArray()
 			;
 
-			StartDiff("mine", pairs);
+			StartDiff("mine", pairs, "Mine Base " + GetMineName(), "Mine Head " + GetMineName());
 
 			listViewChanged.Refresh();
 		}
 
-		void StartDiff(string fileNameBase, IList<Tuple<string, string>> pairs)
+		void StartDiff(string fileNameBase, IList<Tuple<string, string>> pairs, string leftTitle, string rightTitle)
 		{
 			if (pairs.Count > 0 && pairs.All(p => p.Item1 != null && p.Item2 != null))
 			{
 				if (pairs.Count == 1)
 				{
-					StartMerger(pairs[0].Item1, pairs[0].Item2);
+					Start2Diff(pairs[0].Item1, leftTitle, pairs[0].Item2, rightTitle);
 				}
 				else
 				{
-					StartMultidiff(fileNameBase, pairs);
+					StartMultiDiff(fileNameBase, pairs, "Multi: " + leftTitle, "Multi: " + rightTitle);
 				}
 			}
 		}
@@ -610,12 +610,12 @@ For merge will be used mine base.
 				.ToArray()
 			;
 
-			StartDiff("theirs", pairs);
+			StartDiff("theirs", pairs, "Theirs Base " + GetTheirsName(), "Theirs Head " + GetTheirsName());
 
 			listViewChanged.Refresh();
 		}
 
-		void StartMultidiff(string baseFileName, IEnumerable<Tuple<string, string>> pairs)
+		void StartMultiDiff(string baseFileName, IEnumerable<Tuple<string, string>> pairs, string leftTitle, string rightTitle)
 		{
 			// join all files in single 'portianka'
 			var temp = Path.Combine(_tempDir, Guid.NewGuid().ToString("N"));
@@ -644,7 +644,7 @@ For merge will be used mine base.
 				}
 			}
 
-			StartMerger(left, right);
+			Start2Diff(left, leftTitle, right, rightTitle);
 		}
 
 		static void AddPadding(FileStream leftStream, string guid)
@@ -666,7 +666,7 @@ For merge will be used mine base.
 
 			if (ca != null && EnsureTheirsBase(ca) && EnsureMineBase(ca))
 			{
-				StartMerger(ca.TheirsBasePath, ca.MineBasePath);
+				Start2Diff(ca.TheirsBasePath, "Theirs Base " + GetTheirsName(), ca.MineBasePath, "Mine Base " + GetMineName());
 			}
 
 			listViewChanged.Refresh();
@@ -678,13 +678,23 @@ For merge will be used mine base.
 
 			if (ca != null && EnsureTheirs(ca) && EnsureMine(ca))
 			{
-				StartMerger(ca.TheirsPath, ca.MinePath);
+				Start2Diff(ca.TheirsPath, "Theirs Head " + GetTheirsName(), ca.MinePath, "Mine Head " + GetMineName());
 			}
 
 			listViewChanged.Refresh();
 		}
 
-		bool StartMerger(string leftPath, string rightPath, string basePath = null, string mergePath = null)
+		void Start2Diff(string leftPath, string leftTitle, string rightPath, string rightTitle)
+		{
+			StartMergerCommon(leftPath, leftTitle, rightPath, rightTitle, null, null, null, null);
+		}
+
+		bool Start3Diff(VssChangeAtom ca)
+		{
+			return StartMergerCommon(ca.TheirsPath, "Theirs " + GetTheirsName(), ca.MinePath, "Mine " + GetMineName(), ca.TheirsBasePath, "Theirs Base " + GetTheirsName(), ca.MergedPath, ca.MergedPath != null ? "Merge Result" : null);
+		}
+
+		bool StartMergerCommon(string leftPath, string leftTitle, string rightPath, string rightTitle, string basePath, string baseTitle, string mergePath, string mergedTitle)
 		{
 			var mtool = comboBoxMerger.SelectedItem as MergerToolDefinition;
 
@@ -713,9 +723,13 @@ For merge will be used mine base.
 
 			var args = strTemplate
 				.Replace("$LEFT$", '"' + (leftPath ?? "") + '"')
+				.Replace("$LTITLE$", leftTitle)
 				.Replace("$RIGHT$", '"' + (rightPath ?? "") + '"')
+				.Replace("$RTITLE$", rightTitle)
 				.Replace("$BASE$", '"' + (basePath ?? "") + '"')
+				.Replace("$BTITLE$", baseTitle)
 				.Replace("$MERGED$", '"' + (mergePath ?? "") + '"')
+				.Replace("$MTITLE$", mergedTitle)
 			;
 
 			// remember modification time
@@ -749,10 +763,30 @@ For merge will be used mine base.
 
 			if (ca != null && EnsureMine(ca))
 			{
-				StartMerger(ca.MinePath, ca.MergedPath);
+				Start2Diff(ca.MinePath, "Mine " + GetMineName(), ca.MergedPath, "Merge Result");
 			}
 
 			listViewChanged.Refresh();
+		}
+
+		string GetMineName()
+		{
+			return GetVssName(textBoxVssIniMine.Text);
+		}
+
+		string GetTheirsName()
+		{
+			return GetVssName(textBoxVssIniTheirs.Text);
+		}
+
+		static string GetVssName(string path)
+		{
+			if (path.ToLowerInvariant().EndsWith("srcsafe.ini"))
+				path = path.Substring(0, path.Length - "srcsafe.ini".Length);
+
+			var n = Path.GetFileName(path);
+
+			return "(" + n + ")";
 		}
 
 		void Vss3WayMerge_Load(object sender, EventArgs e)
@@ -878,30 +912,6 @@ For merge will be used mine base.
 					ca.Status = Status.Error;
 					ca.StatusDetails = ex.Message;
 				}
-				/*
-				try
-				{
-					if (!EnsureTheirs(ca))
-						continue;
-
-					var item = _mineVss.VSSItem[ca.Spec];
-
-					if (item.IsCheckedOut == 0)
-						item.Checkout();
-
-					ca.MergedPath = item.LocalSpec;
-
-					File.Copy(ca.TheirsPath, ca.MergedPath, true);
-
-					selectedItem.SubItems[4].Text = "Theirs";
-					selectedItem.SubItems[5].Text = "ChOut: " + item.LocalSpec;
-				}
-				catch (Exception ex)
-				{
-					if (MessageBox.Show("Item " + ca.Spec + " error:\n" + ex.Message, "Error", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-						return;
-				}
-				 * */
 			}
 			listViewChanged.Refresh();
 		}
@@ -912,7 +922,7 @@ For merge will be used mine base.
 
 			if (ca != null && EnsureMine(ca) && EnsureTheirs(ca) && EnsureMineBase(ca) && EnsureTheirsBase(ca))
 			{
-				StartMerger(ca.TheirsPath, ca.MinePath, ca.TheirsBasePath, ca.MergedPath);
+				Start3Diff(ca);
 			}
 
 			listViewChanged.Refresh();
@@ -933,7 +943,7 @@ For merge will be used mine base.
 
 		bool _bulkOperation;
 
-		VssChangeAtom[] GetSelectedMergeableItems()
+		IEnumerable<VssChangeAtom> GetSelectedMergeableItems()
 		{
 			var unmergeableCount = 0;
 			var lastUnmergeableSpec = "";

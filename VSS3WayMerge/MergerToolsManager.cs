@@ -23,9 +23,9 @@
 			var bcmp = new MergerToolDefinition {
 				Name = "Beyond Compare 3",
 				Exe = @"C:\Program Files (x86)\Beyond Compare 3\BCompare.exe",
-				Diff = "$LEFT$ $RIGHT$",
-				Diff3 = "$LEFT$ $RIGHT$ $BASE$",
-				Merge = "$LEFT$ $RIGHT$ $BASE$ $MERGED$",
+				Diff = "$LEFT$ $RIGHT$ \"/lefttitle=$LTITLE$\" \"/righttitle=$RTITLE$\"",
+				Diff3 = "$LEFT$ $RIGHT$ $BASE$ \"/lefttitle=$LTITLE$\" \"/righttitle=$RTITLE$\" \"/centertitle=$BTITLE$\"",
+				Merge = "$LEFT$ $RIGHT$ $BASE$ $MERGED$ \"/lefttitle=$LTITLE$\" \"/righttitle=$RTITLE$\" \"/centertitle=$BTITLE$\" \"/outputtitle=$MTITLE$\"",
 			};
 
 			var tgit = new MergerToolDefinition {
