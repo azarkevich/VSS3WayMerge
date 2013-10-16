@@ -1101,12 +1101,18 @@ For merge will be used mine base.
 
 				if (ca.TheirsHead != 0)
 				{
-					sb.AppendFormat("{0} <- ", ca.TheirsHead);
+					if (ca.TheirsHead == ca.BaseVersion)
+						sb.AppendFormat("* <- ");
+					else
+						sb.AppendFormat("{0} <- ", ca.TheirsHead);
 				}
 				sb.AppendFormat("{0}", ca.BaseVersion);
 				if (ca.MineHead != 0)
 				{
-					sb.AppendFormat(" -> {0}", ca.MineHead);
+					if(ca.MineHead == ca.BaseVersion)
+						sb.AppendFormat(" -> *");
+					else
+						sb.AppendFormat(" -> {0}", ca.MineHead);
 				}
 
 				var foreColor = Color.Black;
