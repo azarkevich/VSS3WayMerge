@@ -3,6 +3,8 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="*" Name="VSS 3-Way Merge Tool" Language="1033" Version="0.9.1" Manufacturer="$(var.Manufacturer)" UpgradeCode="964146f1-7f8b-4537-8296-41467fc153cc">
 		<Package Id="*" Description="VSS 3-Way merge helper tool" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Manufacturer="$(var.Manufacturer)" />
+
+		<Property Id="REINSTALLMODE" Value="amus" />
 		
 		<MediaTemplate EmbedCab="yes" />
 		
