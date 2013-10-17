@@ -805,11 +805,9 @@
 			this.ClientSize = new System.Drawing.Size(1063, 531);
 			this.Controls.Add(this.tabControl);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.KeyPreview = true;
 			this.Name = "Vss3WayMerge";
 			this.Text = "VSS 3-Way Merge";
 			this.Load += new System.EventHandler(this.Vss3WayMerge_Load);
-			this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.Vss3WayMerge_PreviewKeyDown);
 			this.tabControl.ResumeLayout(false);
 			this.tabPageForMergeFiles.ResumeLayout(false);
 			this.tabPageForMergeFiles.PerformLayout();

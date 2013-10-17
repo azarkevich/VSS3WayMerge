@@ -1497,16 +1497,26 @@ For merge will be used mine base.
 			}
 		}
 
-		void Vss3WayMerge_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		protected override bool ProcessKeyPreview(ref Message m)
 		{
-			if (e.KeyCode == Keys.Escape)
+			if (m.Msg == 0x0100 /*WM_KEYDOWN*/)
 			{
-				Close();
+				if ((Keys)m.WParam == Keys.Escape)
+				{
+					Close();
+					return true;
+				}
+				
+				if ((Keys)m.WParam == Keys.Enter)
+				{
+					if (listViewChanged.Focused)
+					{
+						threeWayMergeToolStripMenuItem.PerformClick();
+						return true;
+					}
+				}
 			}
-			if (e.KeyCode == Keys.Enter)
-			{
-				threeWayMergeToolStripMenuItem.PerformClick();
-			}
+			return base.ProcessKeyPreview(ref m);
 		}
 	}
 }
