@@ -49,6 +49,9 @@ namespace Vss3WayMerge
 		{
 			InitializeComponent();
 
+			radioButtonVssConnected.Checked = Settings.Default.IsVSSConnect;
+			radioButtonDetached.Checked = !Settings.Default.IsVSSConnect;
+
 			var rootTempDir = Path.Combine(Path.GetTempPath(), "VSS3WayMerge");
 
 			if (!Directory.Exists(rootTempDir))
@@ -129,6 +132,7 @@ namespace Vss3WayMerge
 				using (new Waiter(this))
 				using (StartBulkOperation())
 				{
+					Settings.Default.IsVSSConnect = radioButtonVssConnected.Checked;
 					Settings.Default.Save();
 
 					tabControl.SelectedIndex = 1;
