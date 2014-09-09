@@ -1530,7 +1530,9 @@ For merge will be used mine base.
 			{
 				vss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
 
-				new ScanForBaseline(vss).Scan(textBoxScanProject.Text, dateTimePickerBaseDate.Value.Date + dateTimePickerBaseTime.Value.TimeOfDay);
+				var list = new ScanForBaseline(vss).Scan(textBoxScanProject.Text, dateTimePickerBaseDate.Value.Date + dateTimePickerBaseTime.Value.TimeOfDay);
+
+				textBoxForMergeUnparsedList.Text = string.Join("\r\n", list);
 			}
 			finally
 			{

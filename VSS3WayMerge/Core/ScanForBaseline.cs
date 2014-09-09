@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using SourceSafeTypeLib;
 using Vss3WayMerge.VJP;
@@ -76,9 +73,12 @@ namespace Vss3WayMerge.Core
 		}
 
 		VssFileCache _cache;
+		DateTime _baseTime;
 
 		public List<string> Scan(string project, DateTime baseTime)
 		{
+			_baseTime = baseTime;
+
 			var ret = new List<string>();
 			
 			var vssItem = _vss.VSSItem[project];
@@ -87,7 +87,7 @@ namespace Vss3WayMerge.Core
 				ScanForHistory(vssItem, ret);
 			}
 
-			return null;
+			return ret;
 		}
 
 		void ScanForHistory(IVSSItem vssItem, List<string> ret)
@@ -103,7 +103,7 @@ namespace Vss3WayMerge.Core
 			else
 			{
 				Item item;
-				var cachedData = _cache.GetContent(vssItem.Spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks);
+				var cachedData = _cache.GetContent(spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks);
 				if (cachedData != null)
 				{
 					item = new Item(spec, cachedData);
@@ -115,7 +115,16 @@ namespace Vss3WayMerge.Core
 						History = LoadHistory(vssItem)
 					};
 
-					_cache.AddContent(vssItem.Spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks, item.ToString());
+					_cache.AddContent(spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks, item.ToString());
+				}
+
+				var newChanges = item.History.Where(h => h.Modified >= _baseTime).ToArray();
+
+				if (newChanges.Length > 0)
+				{
+					var last = newChanges.Last();
+					var cl = string.Format("{0}	{1}", spec, last.VssVersion);
+					ret.Add(cl);
 				}
 			}
 		}
