@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using SourceSafeTypeLib;
 using Vss3WayMerge.VJP;
 using vsslib;
@@ -11,10 +12,15 @@ namespace Vss3WayMerge.Core
 	class ScanForBaseline
 	{
 		readonly VSSDatabase _vss;
+		readonly CancellationToken _ct;
 
-		public ScanForBaseline(VSSDatabase vss)
+		VssFileCache _cache;
+		DateTime _baseTime;
+
+		public ScanForBaseline(VSSDatabase vss, CancellationToken ct)
 		{
 			_vss = vss;
+			_ct = ct;
 		}
 
 		class ItemHistoryEntry
@@ -72,8 +78,7 @@ namespace Vss3WayMerge.Core
 			}
 		}
 
-		VssFileCache _cache;
-		DateTime _baseTime;
+		public string CurrentItemSpec;
 
 		public List<string> Scan(string project, DateTime baseTime)
 		{
@@ -92,7 +97,11 @@ namespace Vss3WayMerge.Core
 
 		void ScanForHistory(IVSSItem vssItem, List<string> ret)
 		{
+			_ct.ThrowIfCancellationRequested();
+
 			var spec = vssItem.Spec;
+			CurrentItemSpec = spec;
+
 			if (vssItem.Type == 0)
 			{
 				foreach (IVSSItem child in vssItem.Items)
@@ -129,12 +138,14 @@ namespace Vss3WayMerge.Core
 			}
 		}
 
-		static List<ItemHistoryEntry> LoadHistory(IVSSItem vssItem)
+		List<ItemHistoryEntry> LoadHistory(IVSSItem vssItem)
 		{
 			var ret = new List<ItemHistoryEntry>(vssItem.Versions.Count);
 
 			foreach (IVSSVersion vssVersion in vssItem.Versions)
 			{
+				_ct.ThrowIfCancellationRequested();
+
 				var spec = vssItem.Spec;
 				var action = vssVersion.Action;
 

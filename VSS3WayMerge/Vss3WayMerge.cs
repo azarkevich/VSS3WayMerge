@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using SharpSvn.Diff;
@@ -1521,6 +1523,8 @@ For merge will be used mine base.
 
 		void buttonLoadVSSDB_Click(object sender, EventArgs e)
 		{
+			textBoxForMergeUnparsedList.Text = "";
+
 			var theirsSsIni = GetIniPath(textBoxVssIniTheirs.Text, "'theirs'");
 			if (theirsSsIni == null)
 				return;
@@ -1530,9 +1534,33 @@ For merge will be used mine base.
 			{
 				vss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
 
-				var list = new ScanForBaseline(vss).Scan(textBoxScanProject.Text, dateTimePickerBaseDate.Value.Date + dateTimePickerBaseTime.Value.TimeOfDay);
+				var cts = new CancellationTokenSource();
 
-				textBoxForMergeUnparsedList.Text = string.Join("\r\n", list);
+				var scaner = new ScanForBaseline(vss, cts.Token);
+				var project = textBoxScanProject.Text;
+				var baseTime = dateTimePickerBaseDate.Value.Date + dateTimePickerBaseTime.Value.TimeOfDay;
+
+				var task = Task.Factory.StartNew(() => scaner.Scan(project, baseTime));
+
+				var dlg = new OperationProgress(() => scaner.CurrentItemSpec);
+
+				task
+					.ContinueWith(t => dlg.Close(), cts.Token, TaskContinuationOptions.NotOnCanceled, TaskScheduler.FromCurrentSynchronizationContext())
+				;
+
+				dlg.ShowDialog(this);
+
+				if (!task.IsCompleted)
+				{
+					cts.Cancel();
+					task.Wait();
+				}
+
+				textBoxForMergeUnparsedList.Text = string.Join("\r\n", task.Result);
+			}
+			catch
+			{
+				// TaskCancelled ...
 			}
 			finally
 			{

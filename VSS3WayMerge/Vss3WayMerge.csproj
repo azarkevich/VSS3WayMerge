@@ -74,6 +74,12 @@
     <Compile Include="Interfaces\IMergeDestinationDriver.cs" />
     <Compile Include="MergerToolDefinition.cs" />
     <Compile Include="MergerToolsManager.cs" />
+    <Compile Include="OperationProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperationProgress.Designer.cs">
+      <DependentUpon>OperationProgress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Status.cs" />
     <Compile Include="Tools\CancellableWait.cs">
       <SubType>Form</SubType>
@@ -100,6 +106,9 @@
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OperationProgress.resx">
+      <DependentUpon>OperationProgress.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\CancellableWait.resx">
       <DependentUpon>CancellableWait.cs</DependentUpon>
     </EmbeddedResource>
@@ -114,6 +123,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -138,6 +148,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\spin.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
