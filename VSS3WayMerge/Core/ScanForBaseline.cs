@@ -103,10 +103,10 @@ namespace Vss3WayMerge.Core
 			else
 			{
 				Item item;
-				var cachedData = _cache.GetFilePath(vssItem.Spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks);
+				var cachedData = _cache.GetContent(vssItem.Spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks);
 				if (cachedData != null)
 				{
-					item = new Item(spec, File.ReadAllText(cachedData));
+					item = new Item(spec, cachedData);
 				}
 				else
 				{
@@ -115,7 +115,7 @@ namespace Vss3WayMerge.Core
 						History = LoadHistory(vssItem)
 					};
 
-					_cache.AddFileContent(vssItem.Spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks, item.ToString());
+					_cache.AddContent(vssItem.Spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks, item.ToString());
 				}
 			}
 		}

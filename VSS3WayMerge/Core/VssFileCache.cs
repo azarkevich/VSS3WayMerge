@@ -18,46 +18,19 @@ namespace vsslib
 			_cache = new FileCache(tempDir);
 		}
 
-		public string GetFilePath(string spec, int ver)
+		public string GetContent(string spec, int ver, long timestamp)
 		{
-			return _cache.GetFilePath(MakeKey(spec, ver));
+			var data = _cache.GetChunk(MakeKey(spec, ver, timestamp));
+
+			if (data == null)
+				return null;
+
+			return Encoding.UTF8.GetString(data);
 		}
 
-		public string GetFilePath(string spec, int ver, long timeStamp)
+		public void AddContent(string spec, int ver, long timestamp, string content)
 		{
-			return _cache.GetFilePath(MakeKey(spec, ver, timeStamp));
-		}
-
-		public string GetFileError(string spec, int ver)
-		{
-			return _cache.GetFileNotes(MakeKey(spec, ver));
-		}
-
-		public void AddFile(string spec, int ver, long timestamp, string path, bool copy)
-		{
-			_cache.AddFile(MakeKey(spec, ver, timestamp), path, copy);
-		}
-
-		public void AddFileContent(string spec, int ver, long timestamp, string content)
-		{
-			_cache.AddFileContent(MakeKey(spec, ver, timestamp), content);
-		}
-
-		public void AddError(string spec, int ver, string err)
-		{
-			_cache.AddNotes(MakeKey(spec, ver), err);
-		}
-
-		public FileCache.CacheEntry GetFileInfo(string spec, int ver)
-		{
-			return _cache.GetFileInfo(MakeKey(spec, ver));
-		}
-
-		string MakeKey(string spec, int ver)
-		{
-			spec = spec.Replace('\\', '/').Trim().TrimEnd('/').ToLowerInvariant();
-
-			return _vssDbPath + "#" + spec + "@" + ver;
+			_cache.AddChunk(MakeKey(spec, ver, timestamp), Encoding.UTF8.GetBytes(content));
 		}
 
 		SHA1Managed _hashAlgo;
