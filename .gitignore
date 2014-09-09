@@ -12,3 +12,4 @@
 *.DotSettings
 /packages/
 *.msi
+/_ReSharper.*

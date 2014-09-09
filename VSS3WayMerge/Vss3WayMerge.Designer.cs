@@ -34,13 +34,17 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tabPageForMergeFiles = new System.Windows.Forms.TabPage();
-			this.radioButtonVssConnected = new System.Windows.Forms.RadioButton();
-			this.textBoxJournal = new System.Windows.Forms.TextBox();
-			this.radioButtonDetached = new System.Windows.Forms.RadioButton();
+			this.tabControlDetectChanges = new System.Windows.Forms.TabControl();
+			this.tabPageDetectChangesByJournal = new System.Windows.Forms.TabPage();
 			this.buttonFindJournal = new System.Windows.Forms.Button();
+			this.buttonParseJournal = new System.Windows.Forms.Button();
+			this.textBoxJournal = new System.Windows.Forms.TextBox();
+			this.tabPageDetectChangesByDatabase = new System.Windows.Forms.TabPage();
+			this.buttonLoadVSSDB = new System.Windows.Forms.Button();
+			this.radioButtonVssConnected = new System.Windows.Forms.RadioButton();
+			this.radioButtonDetached = new System.Windows.Forms.RadioButton();
 			this.buttonParseForMergeList = new System.Windows.Forms.Button();
 			this.textBoxDetachedMergeDestination = new System.Windows.Forms.TextBox();
-			this.buttonParseJournal = new System.Windows.Forms.Button();
 			this.textBoxTheirsPwd = new System.Windows.Forms.TextBox();
 			this.textBoxForMergeUnparsedList = new System.Windows.Forms.TextBox();
 			this.textBoxTheirsUser = new System.Windows.Forms.TextBox();
@@ -102,8 +106,16 @@
 			this.comboBoxMerger = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.label2 = new System.Windows.Forms.Label();
+			this.textBoxScanProject = new System.Windows.Forms.TextBox();
+			this.dateTimePickerBaseDate = new System.Windows.Forms.DateTimePicker();
+			this.label3 = new System.Windows.Forms.Label();
+			this.dateTimePickerBaseTime = new System.Windows.Forms.DateTimePicker();
 			this.tabControl.SuspendLayout();
 			this.tabPageForMergeFiles.SuspendLayout();
+			this.tabControlDetectChanges.SuspendLayout();
+			this.tabPageDetectChangesByJournal.SuspendLayout();
+			this.tabPageDetectChangesByDatabase.SuspendLayout();
 			this.tabPageDiffs.SuspendLayout();
 			this.contextMenuStripDiffs.SuspendLayout();
 			this.tabPageLog.SuspendLayout();
@@ -144,13 +156,11 @@
 			// tabPageForMergeFiles
 			// 
 			this.tabPageForMergeFiles.BackColor = System.Drawing.SystemColors.Control;
+			this.tabPageForMergeFiles.Controls.Add(this.tabControlDetectChanges);
 			this.tabPageForMergeFiles.Controls.Add(this.radioButtonVssConnected);
-			this.tabPageForMergeFiles.Controls.Add(this.textBoxJournal);
 			this.tabPageForMergeFiles.Controls.Add(this.radioButtonDetached);
-			this.tabPageForMergeFiles.Controls.Add(this.buttonFindJournal);
 			this.tabPageForMergeFiles.Controls.Add(this.buttonParseForMergeList);
 			this.tabPageForMergeFiles.Controls.Add(this.textBoxDetachedMergeDestination);
-			this.tabPageForMergeFiles.Controls.Add(this.buttonParseJournal);
 			this.tabPageForMergeFiles.Controls.Add(this.textBoxTheirsPwd);
 			this.tabPageForMergeFiles.Controls.Add(this.textBoxForMergeUnparsedList);
 			this.tabPageForMergeFiles.Controls.Add(this.textBoxTheirsUser);
@@ -169,6 +179,92 @@
 			this.tabPageForMergeFiles.TabIndex = 4;
 			this.tabPageForMergeFiles.Text = "Files for merge";
 			// 
+			// tabControlDetectChanges
+			// 
+			this.tabControlDetectChanges.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tabControlDetectChanges.Controls.Add(this.tabPageDetectChangesByJournal);
+			this.tabControlDetectChanges.Controls.Add(this.tabPageDetectChangesByDatabase);
+			this.tabControlDetectChanges.Location = new System.Drawing.Point(8, 56);
+			this.tabControlDetectChanges.Name = "tabControlDetectChanges";
+			this.tabControlDetectChanges.SelectedIndex = 0;
+			this.tabControlDetectChanges.Size = new System.Drawing.Size(1041, 66);
+			this.tabControlDetectChanges.TabIndex = 18;
+			// 
+			// tabPageDetectChangesByJournal
+			// 
+			this.tabPageDetectChangesByJournal.Controls.Add(this.buttonFindJournal);
+			this.tabPageDetectChangesByJournal.Controls.Add(this.buttonParseJournal);
+			this.tabPageDetectChangesByJournal.Controls.Add(this.textBoxJournal);
+			this.tabPageDetectChangesByJournal.Location = new System.Drawing.Point(4, 22);
+			this.tabPageDetectChangesByJournal.Name = "tabPageDetectChangesByJournal";
+			this.tabPageDetectChangesByJournal.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageDetectChangesByJournal.Size = new System.Drawing.Size(1033, 40);
+			this.tabPageDetectChangesByJournal.TabIndex = 0;
+			this.tabPageDetectChangesByJournal.Text = "By journal file (fast)";
+			this.tabPageDetectChangesByJournal.UseVisualStyleBackColor = true;
+			// 
+			// buttonFindJournal
+			// 
+			this.buttonFindJournal.Location = new System.Drawing.Point(6, 6);
+			this.buttonFindJournal.Name = "buttonFindJournal";
+			this.buttonFindJournal.Size = new System.Drawing.Size(96, 23);
+			this.buttonFindJournal.TabIndex = 13;
+			this.buttonFindJournal.Text = "Find journal =>";
+			this.toolTip.SetToolTip(this.buttonFindJournal, "Find journal file in \'theirs\' VSS database");
+			this.buttonFindJournal.UseVisualStyleBackColor = true;
+			this.buttonFindJournal.Click += new System.EventHandler(this.buttonFindJournal_Click);
+			// 
+			// buttonParseJournal
+			// 
+			this.buttonParseJournal.Location = new System.Drawing.Point(493, 6);
+			this.buttonParseJournal.Name = "buttonParseJournal";
+			this.buttonParseJournal.Size = new System.Drawing.Size(114, 23);
+			this.buttonParseJournal.TabIndex = 15;
+			this.buttonParseJournal.Text = "Parse journal(s) ...";
+			this.toolTip.SetToolTip(this.buttonParseJournal, "Parse journal files and produce serialized differences definitions");
+			this.buttonParseJournal.UseVisualStyleBackColor = true;
+			this.buttonParseJournal.Click += new System.EventHandler(this.buttonParseJournal_Click);
+			// 
+			// textBoxJournal
+			// 
+			this.textBoxJournal.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssJournalFiles", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBoxJournal.Location = new System.Drawing.Point(108, 8);
+			this.textBoxJournal.Name = "textBoxJournal";
+			this.textBoxJournal.Size = new System.Drawing.Size(379, 20);
+			this.textBoxJournal.TabIndex = 14;
+			this.textBoxJournal.Text = global::Vss3WayMerge.Properties.Settings.Default.VssJournalFiles;
+			this.toolTip.SetToolTip(this.textBoxJournal, "One or mode journal files for parse.\r\n\r\nSeparator ;");
+			// 
+			// tabPageDetectChangesByDatabase
+			// 
+			this.tabPageDetectChangesByDatabase.Controls.Add(this.dateTimePickerBaseTime);
+			this.tabPageDetectChangesByDatabase.Controls.Add(this.label3);
+			this.tabPageDetectChangesByDatabase.Controls.Add(this.dateTimePickerBaseDate);
+			this.tabPageDetectChangesByDatabase.Controls.Add(this.textBoxScanProject);
+			this.tabPageDetectChangesByDatabase.Controls.Add(this.label2);
+			this.tabPageDetectChangesByDatabase.Controls.Add(this.buttonLoadVSSDB);
+			this.tabPageDetectChangesByDatabase.Location = new System.Drawing.Point(4, 22);
+			this.tabPageDetectChangesByDatabase.Name = "tabPageDetectChangesByDatabase";
+			this.tabPageDetectChangesByDatabase.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageDetectChangesByDatabase.Size = new System.Drawing.Size(1033, 40);
+			this.tabPageDetectChangesByDatabase.TabIndex = 1;
+			this.tabPageDetectChangesByDatabase.Text = "By VSS database (slow, precise)";
+			this.tabPageDetectChangesByDatabase.UseVisualStyleBackColor = true;
+			// 
+			// buttonLoadVSSDB
+			// 
+			this.buttonLoadVSSDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonLoadVSSDB.Location = new System.Drawing.Point(922, 6);
+			this.buttonLoadVSSDB.Name = "buttonLoadVSSDB";
+			this.buttonLoadVSSDB.Size = new System.Drawing.Size(105, 23);
+			this.buttonLoadVSSDB.TabIndex = 0;
+			this.buttonLoadVSSDB.Text = "Load Baselines";
+			this.toolTip.SetToolTip(this.buttonLoadVSSDB, "Determine chnaged files and base version based on DateTime.\r\nDelete \'.rev-cache\' " +
+        "for drop cache");
+			this.buttonLoadVSSDB.UseVisualStyleBackColor = true;
+			this.buttonLoadVSSDB.Click += new System.EventHandler(this.buttonLoadVSSDB_Click);
+			// 
 			// radioButtonVssConnected
 			// 
 			this.radioButtonVssConnected.AutoSize = true;
@@ -183,16 +279,6 @@
 			this.toolTip.SetToolTip(this.radioButtonVssConnected, resources.GetString("radioButtonVssConnected.ToolTip"));
 			this.radioButtonVssConnected.UseVisualStyleBackColor = true;
 			// 
-			// textBoxJournal
-			// 
-			this.textBoxJournal.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssJournalFiles", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxJournal.Location = new System.Drawing.Point(110, 56);
-			this.textBoxJournal.Name = "textBoxJournal";
-			this.textBoxJournal.Size = new System.Drawing.Size(379, 20);
-			this.textBoxJournal.TabIndex = 14;
-			this.textBoxJournal.Text = global::Vss3WayMerge.Properties.Settings.Default.VssJournalFiles;
-			this.toolTip.SetToolTip(this.textBoxJournal, "One or mode journal files for parse.\r\n\r\nSeparator ;");
-			// 
 			// radioButtonDetached
 			// 
 			this.radioButtonDetached.AutoSize = true;
@@ -204,17 +290,6 @@
 			this.toolTip.SetToolTip(this.radioButtonDetached, "Detached mode.\r\n\r\nMerged files will be stored on disk with specified root.\r\n\r\nAft" +
         "er utility work this files can be loaded to VSS");
 			this.radioButtonDetached.UseVisualStyleBackColor = true;
-			// 
-			// buttonFindJournal
-			// 
-			this.buttonFindJournal.Location = new System.Drawing.Point(8, 54);
-			this.buttonFindJournal.Name = "buttonFindJournal";
-			this.buttonFindJournal.Size = new System.Drawing.Size(96, 23);
-			this.buttonFindJournal.TabIndex = 13;
-			this.buttonFindJournal.Text = "Find journal =>";
-			this.toolTip.SetToolTip(this.buttonFindJournal, "Find journal file in \'theirs\' VSS database");
-			this.buttonFindJournal.UseVisualStyleBackColor = true;
-			this.buttonFindJournal.Click += new System.EventHandler(this.buttonFindJournal_Click);
 			// 
 			// buttonParseForMergeList
 			// 
@@ -240,17 +315,6 @@
 			this.toolTip.SetToolTip(this.textBoxDetachedMergeDestination, "Merged results root. Directory will be created.\r\n\r\nExisting directory will not be" +
         " cleaned up.");
 			// 
-			// buttonParseJournal
-			// 
-			this.buttonParseJournal.Location = new System.Drawing.Point(495, 54);
-			this.buttonParseJournal.Name = "buttonParseJournal";
-			this.buttonParseJournal.Size = new System.Drawing.Size(114, 23);
-			this.buttonParseJournal.TabIndex = 15;
-			this.buttonParseJournal.Text = "Parse journal(s) ...";
-			this.toolTip.SetToolTip(this.buttonParseJournal, "Parse journal files and produce serialized differences definitions");
-			this.buttonParseJournal.UseVisualStyleBackColor = true;
-			this.buttonParseJournal.Click += new System.EventHandler(this.buttonParseJournal_Click);
-			// 
 			// textBoxTheirsPwd
 			// 
 			this.textBoxTheirsPwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
@@ -267,12 +331,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxForMergeUnparsedList.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "LastParseableText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxForMergeUnparsedList.Location = new System.Drawing.Point(6, 83);
+			this.textBoxForMergeUnparsedList.Location = new System.Drawing.Point(6, 128);
 			this.textBoxForMergeUnparsedList.MaxLength = 1000000000;
 			this.textBoxForMergeUnparsedList.Multiline = true;
 			this.textBoxForMergeUnparsedList.Name = "textBoxForMergeUnparsedList";
 			this.textBoxForMergeUnparsedList.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBoxForMergeUnparsedList.Size = new System.Drawing.Size(1043, 387);
+			this.textBoxForMergeUnparsedList.Size = new System.Drawing.Size(1043, 342);
 			this.textBoxForMergeUnparsedList.TabIndex = 16;
 			this.textBoxForMergeUnparsedList.Text = global::Vss3WayMerge.Properties.Settings.Default.LastParseableText;
 			this.textBoxForMergeUnparsedList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxForMergeUnparsedList_KeyDown);
@@ -798,6 +862,54 @@
 			this.toolTip.InitialDelay = 100;
 			this.toolTip.ReshowDelay = 20;
 			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(3, 11);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(67, 13);
+			this.label2.TabIndex = 1;
+			this.label2.Text = "VSS Project:";
+			// 
+			// textBoxScanProject
+			// 
+			this.textBoxScanProject.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxScanProject.Location = new System.Drawing.Point(79, 8);
+			this.textBoxScanProject.Name = "textBoxScanProject";
+			this.textBoxScanProject.Size = new System.Drawing.Size(529, 20);
+			this.textBoxScanProject.TabIndex = 2;
+			this.textBoxScanProject.Text = "$/Common/Converters2";
+			// 
+			// dateTimePickerBaseDate
+			// 
+			this.dateTimePickerBaseDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.dateTimePickerBaseDate.Location = new System.Drawing.Point(680, 8);
+			this.dateTimePickerBaseDate.Name = "dateTimePickerBaseDate";
+			this.dateTimePickerBaseDate.Size = new System.Drawing.Size(147, 20);
+			this.dateTimePickerBaseDate.TabIndex = 3;
+			this.dateTimePickerBaseDate.Value = new System.DateTime(2013, 9, 1, 0, 0, 0, 0);
+			// 
+			// label3
+			// 
+			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(614, 11);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(60, 13);
+			this.label3.TabIndex = 4;
+			this.label3.Text = "Base point:";
+			// 
+			// dateTimePickerBaseTime
+			// 
+			this.dateTimePickerBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.dateTimePickerBaseTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+			this.dateTimePickerBaseTime.Location = new System.Drawing.Point(833, 8);
+			this.dateTimePickerBaseTime.Name = "dateTimePickerBaseTime";
+			this.dateTimePickerBaseTime.Size = new System.Drawing.Size(83, 20);
+			this.dateTimePickerBaseTime.TabIndex = 5;
+			this.dateTimePickerBaseTime.Value = new System.DateTime(2014, 9, 9, 0, 0, 0, 0);
+			// 
 			// Vss3WayMerge
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -811,6 +923,11 @@
 			this.tabControl.ResumeLayout(false);
 			this.tabPageForMergeFiles.ResumeLayout(false);
 			this.tabPageForMergeFiles.PerformLayout();
+			this.tabControlDetectChanges.ResumeLayout(false);
+			this.tabPageDetectChangesByJournal.ResumeLayout(false);
+			this.tabPageDetectChangesByJournal.PerformLayout();
+			this.tabPageDetectChangesByDatabase.ResumeLayout(false);
+			this.tabPageDetectChangesByDatabase.PerformLayout();
 			this.tabPageDiffs.ResumeLayout(false);
 			this.contextMenuStripDiffs.ResumeLayout(false);
 			this.tabPageLog.ResumeLayout(false);
@@ -895,6 +1012,15 @@
 		private System.Windows.Forms.RadioButton radioButtonDetached;
 		private System.Windows.Forms.RadioButton radioButtonVssConnected;
 		private System.Windows.Forms.ToolTip toolTip;
+		private System.Windows.Forms.TabControl tabControlDetectChanges;
+		private System.Windows.Forms.TabPage tabPageDetectChangesByJournal;
+		private System.Windows.Forms.TabPage tabPageDetectChangesByDatabase;
+		private System.Windows.Forms.Button buttonLoadVSSDB;
+		private System.Windows.Forms.DateTimePicker dateTimePickerBaseDate;
+		private System.Windows.Forms.TextBox textBoxScanProject;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.DateTimePicker dateTimePickerBaseTime;
 	}
 }
 

@@ -12,12 +12,14 @@ using System.IO;
 using SharpSvn.Diff;
 using SourceSafeTypeLib;
 using System.ComponentModel;
+using Vss3WayMerge.Core;
 using Vss3WayMerge.Drivers;
 using Vss3WayMerge.Interfaces;
 using Vss3WayMerge.Properties;
 using System.Collections.Generic;
 using Vss3WayMerge.Tools;
 using Vss3WayMerge.VJP;
+using vsslib;
 
 namespace Vss3WayMerge
 {
@@ -1214,9 +1216,7 @@ For merge will be used mine base.
 				var nodes = new VssJournalPlayer().Play(journals);
 
 				var str = nodes
-					.Aggregate(new StringBuilder(), (sb, n) =>
-					{
-
+					.Aggregate(new StringBuilder(), (sb, n) => {
 						sb.AppendFormat("{0}	{1}", n.Spec, n.FirstChange);
 						if (!n.IsPureModified)
 						{
@@ -1517,6 +1517,25 @@ For merge will be used mine base.
 				}
 			}
 			return base.ProcessKeyPreview(ref m);
+		}
+
+		void buttonLoadVSSDB_Click(object sender, EventArgs e)
+		{
+			var theirsSsIni = GetIniPath(textBoxVssIniTheirs.Text, "'theirs'");
+			if (theirsSsIni == null)
+				return;
+
+			var vss = new VSSDatabase();
+			try
+			{
+				vss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
+
+				new ScanForBaseline(vss).Scan(textBoxScanProject.Text, dateTimePickerBaseDate.Value.Date + dateTimePickerBaseTime.Value.TimeOfDay);
+			}
+			finally
+			{
+				vss.Close();
+			}
 		}
 	}
 }

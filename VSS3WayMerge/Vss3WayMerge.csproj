@@ -64,6 +64,9 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\FileCache.cs" />
+    <Compile Include="Core\ScanForBaseline.cs" />
+    <Compile Include="Core\VssFileCache.cs" />
     <Compile Include="Drivers\DetachedDriver.cs" />
     <Compile Include="Drivers\VssDriver.cs" />
     <Compile Include="ICLRRuntimeInfo.cs" />

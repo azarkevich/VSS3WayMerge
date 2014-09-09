@@ -106,7 +106,7 @@ namespace Vss3WayMerge.VJP
 			public VssChangeType Type;
 		}
 
-		readonly static ActionParser[] Parsers = new[] {
+		readonly static ActionParser[] Parsers = {
 			new ActionParser { Token = "Labeled", StartsWith = true, Type = VssChangeType.Labeled },
 			new ActionParser { Token = "Restored version ", StartsWith = true, Type = VssChangeType.Restored },
 			new ActionParser { Token = "Archived version ", StartsWith = true, Type = VssChangeType.Restored },
@@ -125,7 +125,7 @@ namespace Vss3WayMerge.VJP
 			new ActionParser { Token = " copied from ", Type = VssChangeType.Copy },
 		};
 
-		static VssChangeType ParseAction(string line, ref string specForFix, out string prevSpec)
+		public static VssChangeType ParseAction(string line, ref string specForFix, out string prevSpec)
 		{
 			prevSpec = null;
 
