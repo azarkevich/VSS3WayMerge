@@ -34,6 +34,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.tabControl = new System.Windows.Forms.TabControl();
 			this.tabPageForMergeFiles = new System.Windows.Forms.TabPage();
+			this.label12 = new System.Windows.Forms.Label();
 			this.tabControlDetectChanges = new System.Windows.Forms.TabControl();
 			this.tabPageDetectChangesByJournal = new System.Windows.Forms.TabPage();
 			this.buttonFindJournal = new System.Windows.Forms.Button();
@@ -112,7 +113,9 @@
 			this.comboBoxMerger = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.label12 = new System.Windows.Forms.Label();
+			this.tabControlSourceDestination = new System.Windows.Forms.TabControl();
+			this.tabPageMergeSource = new System.Windows.Forms.TabPage();
+			this.tabPageMergeDestination = new System.Windows.Forms.TabPage();
 			this.tabControl.SuspendLayout();
 			this.tabPageForMergeFiles.SuspendLayout();
 			this.tabControlDetectChanges.SuspendLayout();
@@ -122,26 +125,29 @@
 			this.contextMenuStripDiffs.SuspendLayout();
 			this.tabPageLog.SuspendLayout();
 			this.tabPageOprions.SuspendLayout();
+			this.tabControlSourceDestination.SuspendLayout();
+			this.tabPageMergeSource.SuspendLayout();
+			this.tabPageMergeDestination.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label1
 			// 
 			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(689, 9);
+			this.label1.Location = new System.Drawing.Point(6, 9);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(104, 13);
+			this.label1.Size = new System.Drawing.Size(75, 13);
 			this.label1.TabIndex = 5;
-			this.label1.Text = "==> Merge to (mine):";
+			this.label1.Text = "Mine VSS DB:";
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
 			this.label4.Location = new System.Drawing.Point(5, 9);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(97, 13);
+			this.label4.Size = new System.Drawing.Size(81, 13);
 			this.label4.TabIndex = 0;
-			this.label4.Text = "Merge from (theirs):";
+			this.label4.Text = "Theirs VSS DB:";
 			// 
 			// tabControl
 			// 
@@ -159,23 +165,10 @@
 			// tabPageForMergeFiles
 			// 
 			this.tabPageForMergeFiles.BackColor = System.Drawing.SystemColors.Control;
-			this.tabPageForMergeFiles.Controls.Add(this.label12);
+			this.tabPageForMergeFiles.Controls.Add(this.tabControlSourceDestination);
 			this.tabPageForMergeFiles.Controls.Add(this.tabControlDetectChanges);
-			this.tabPageForMergeFiles.Controls.Add(this.radioButtonVssConnected);
-			this.tabPageForMergeFiles.Controls.Add(this.radioButtonDetached);
 			this.tabPageForMergeFiles.Controls.Add(this.buttonParseForMergeList);
-			this.tabPageForMergeFiles.Controls.Add(this.textBoxDetachedMergeDestination);
-			this.tabPageForMergeFiles.Controls.Add(this.textBoxTheirsPwd);
 			this.tabPageForMergeFiles.Controls.Add(this.textBoxForMergeUnparsedList);
-			this.tabPageForMergeFiles.Controls.Add(this.textBoxTheirsUser);
-			this.tabPageForMergeFiles.Controls.Add(this.textBoxVssIniTheirs);
-			this.tabPageForMergeFiles.Controls.Add(this.textBoxMinePwd);
-			this.tabPageForMergeFiles.Controls.Add(this.label1);
-			this.tabPageForMergeFiles.Controls.Add(this.label6);
-			this.tabPageForMergeFiles.Controls.Add(this.label4);
-			this.tabPageForMergeFiles.Controls.Add(this.textBoxMineUser);
-			this.tabPageForMergeFiles.Controls.Add(this.textBoxVssIniMine);
-			this.tabPageForMergeFiles.Controls.Add(this.label5);
 			this.tabPageForMergeFiles.Location = new System.Drawing.Point(4, 22);
 			this.tabPageForMergeFiles.Name = "tabPageForMergeFiles";
 			this.tabPageForMergeFiles.Padding = new System.Windows.Forms.Padding(3);
@@ -183,13 +176,23 @@
 			this.tabPageForMergeFiles.TabIndex = 4;
 			this.tabPageForMergeFiles.Text = "Files for merge";
 			// 
+			// label12
+			// 
+			this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(365, 9);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(87, 13);
+			this.label12.TabIndex = 19;
+			this.label12.Text = "User + Password";
+			// 
 			// tabControlDetectChanges
 			// 
 			this.tabControlDetectChanges.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tabControlDetectChanges.Controls.Add(this.tabPageDetectChangesByJournal);
 			this.tabControlDetectChanges.Controls.Add(this.tabPageDetectChangesByDatabase);
-			this.tabControlDetectChanges.Location = new System.Drawing.Point(6, 84);
+			this.tabControlDetectChanges.Location = new System.Drawing.Point(6, 108);
 			this.tabControlDetectChanges.Name = "tabControlDetectChanges";
 			this.tabControlDetectChanges.SelectedIndex = 0;
 			this.tabControlDetectChanges.Size = new System.Drawing.Size(1043, 66);
@@ -339,7 +342,7 @@
 			this.radioButtonVssConnected.AutoSize = true;
 			this.radioButtonVssConnected.Checked = true;
 			this.radioButtonVssConnected.ForeColor = System.Drawing.Color.Red;
-			this.radioButtonVssConnected.Location = new System.Drawing.Point(600, 59);
+			this.radioButtonVssConnected.Location = new System.Drawing.Point(110, 40);
 			this.radioButtonVssConnected.Name = "radioButtonVssConnected";
 			this.radioButtonVssConnected.Size = new System.Drawing.Size(170, 17);
 			this.radioButtonVssConnected.TabIndex = 10;
@@ -352,7 +355,7 @@
 			// 
 			this.radioButtonDetached.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.radioButtonDetached.AutoSize = true;
-			this.radioButtonDetached.Location = new System.Drawing.Point(776, 59);
+			this.radioButtonDetached.Location = new System.Drawing.Point(286, 40);
 			this.radioButtonDetached.Name = "radioButtonDetached";
 			this.radioButtonDetached.Size = new System.Drawing.Size(72, 17);
 			this.radioButtonDetached.TabIndex = 11;
@@ -378,7 +381,7 @@
 			// 
 			this.textBoxDetachedMergeDestination.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxDetachedMergeDestination.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "DetachedMergeDestination", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxDetachedMergeDestination.Location = new System.Drawing.Point(854, 58);
+			this.textBoxDetachedMergeDestination.Location = new System.Drawing.Point(364, 39);
 			this.textBoxDetachedMergeDestination.Name = "textBoxDetachedMergeDestination";
 			this.textBoxDetachedMergeDestination.Size = new System.Drawing.Size(191, 20);
 			this.textBoxDetachedMergeDestination.TabIndex = 12;
@@ -389,7 +392,7 @@
 			// textBoxTheirsPwd
 			// 
 			this.textBoxTheirsPwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxTheirsPwd.Location = new System.Drawing.Point(190, 29);
+			this.textBoxTheirsPwd.Location = new System.Drawing.Point(555, 6);
 			this.textBoxTheirsPwd.Name = "textBoxTheirsPwd";
 			this.textBoxTheirsPwd.PasswordChar = '*';
 			this.textBoxTheirsPwd.Size = new System.Drawing.Size(75, 20);
@@ -402,12 +405,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxForMergeUnparsedList.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "LastParseableText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxForMergeUnparsedList.Location = new System.Drawing.Point(6, 156);
+			this.textBoxForMergeUnparsedList.Location = new System.Drawing.Point(6, 180);
 			this.textBoxForMergeUnparsedList.MaxLength = 1000000000;
 			this.textBoxForMergeUnparsedList.Multiline = true;
 			this.textBoxForMergeUnparsedList.Name = "textBoxForMergeUnparsedList";
 			this.textBoxForMergeUnparsedList.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBoxForMergeUnparsedList.Size = new System.Drawing.Size(923, 366);
+			this.textBoxForMergeUnparsedList.Size = new System.Drawing.Size(923, 342);
 			this.textBoxForMergeUnparsedList.TabIndex = 16;
 			this.textBoxForMergeUnparsedList.Text = global::Vss3WayMerge.Properties.Settings.Default.LastParseableText;
 			this.textBoxForMergeUnparsedList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxForMergeUnparsedList_KeyDown);
@@ -415,7 +418,7 @@
 			// textBoxTheirsUser
 			// 
 			this.textBoxTheirsUser.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxTheirsUser.Location = new System.Drawing.Point(108, 29);
+			this.textBoxTheirsUser.Location = new System.Drawing.Point(473, 6);
 			this.textBoxTheirsUser.Name = "textBoxTheirsUser";
 			this.textBoxTheirsUser.Size = new System.Drawing.Size(76, 20);
 			this.textBoxTheirsUser.TabIndex = 3;
@@ -424,7 +427,7 @@
 			// textBoxVssIniTheirs
 			// 
 			this.textBoxVssIniTheirs.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssTheirs", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxVssIniTheirs.Location = new System.Drawing.Point(108, 6);
+			this.textBoxVssIniTheirs.Location = new System.Drawing.Point(92, 6);
 			this.textBoxVssIniTheirs.Name = "textBoxVssIniTheirs";
 			this.textBoxVssIniTheirs.Size = new System.Drawing.Size(257, 20);
 			this.textBoxVssIniTheirs.TabIndex = 1;
@@ -435,7 +438,7 @@
 			// 
 			this.textBoxMinePwd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxMinePwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssMinePassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxMinePwd.Location = new System.Drawing.Point(908, 32);
+			this.textBoxMinePwd.Location = new System.Drawing.Point(567, 6);
 			this.textBoxMinePwd.Name = "textBoxMinePwd";
 			this.textBoxMinePwd.PasswordChar = '*';
 			this.textBoxMinePwd.Size = new System.Drawing.Size(99, 20);
@@ -446,7 +449,7 @@
 			// 
 			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(500, 61);
+			this.label6.Location = new System.Drawing.Point(10, 42);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(94, 13);
 			this.label6.TabIndex = 9;
@@ -456,7 +459,7 @@
 			// 
 			this.textBoxMineUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxMineUser.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssMineUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxMineUser.Location = new System.Drawing.Point(799, 32);
+			this.textBoxMineUser.Location = new System.Drawing.Point(458, 6);
 			this.textBoxMineUser.Name = "textBoxMineUser";
 			this.textBoxMineUser.Size = new System.Drawing.Size(103, 20);
 			this.textBoxMineUser.TabIndex = 7;
@@ -466,7 +469,7 @@
 			// 
 			this.textBoxVssIniMine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxVssIniMine.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssMine", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxVssIniMine.Location = new System.Drawing.Point(799, 6);
+			this.textBoxVssIniMine.Location = new System.Drawing.Point(87, 6);
 			this.textBoxVssIniMine.Name = "textBoxVssIniMine";
 			this.textBoxVssIniMine.Size = new System.Drawing.Size(250, 20);
 			this.textBoxVssIniMine.TabIndex = 6;
@@ -477,7 +480,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(6, 32);
+			this.label5.Location = new System.Drawing.Point(380, 9);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(87, 13);
 			this.label5.TabIndex = 2;
@@ -489,7 +492,7 @@
 			this.tabPageDiffs.Location = new System.Drawing.Point(4, 22);
 			this.tabPageDiffs.Name = "tabPageDiffs";
 			this.tabPageDiffs.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageDiffs.Size = new System.Drawing.Size(1055, 505);
+			this.tabPageDiffs.Size = new System.Drawing.Size(1055, 530);
 			this.tabPageDiffs.TabIndex = 1;
 			this.tabPageDiffs.Text = "Differences";
 			this.tabPageDiffs.UseVisualStyleBackColor = true;
@@ -508,7 +511,7 @@
 			this.listViewChanged.GridLines = true;
 			this.listViewChanged.Location = new System.Drawing.Point(3, 3);
 			this.listViewChanged.Name = "listViewChanged";
-			this.listViewChanged.Size = new System.Drawing.Size(1049, 499);
+			this.listViewChanged.Size = new System.Drawing.Size(1049, 524);
 			this.listViewChanged.TabIndex = 1;
 			this.listViewChanged.UseCompatibleStateImageBehavior = false;
 			this.listViewChanged.View = System.Windows.Forms.View.Details;
@@ -799,7 +802,7 @@
 			this.tabPageLog.Location = new System.Drawing.Point(4, 22);
 			this.tabPageLog.Name = "tabPageLog";
 			this.tabPageLog.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageLog.Size = new System.Drawing.Size(1055, 505);
+			this.tabPageLog.Size = new System.Drawing.Size(1055, 530);
 			this.tabPageLog.TabIndex = 0;
 			this.tabPageLog.Text = "Log";
 			this.tabPageLog.UseVisualStyleBackColor = true;
@@ -811,7 +814,7 @@
 			this.textBoxLog.Multiline = true;
 			this.textBoxLog.Name = "textBoxLog";
 			this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBoxLog.Size = new System.Drawing.Size(1049, 499);
+			this.textBoxLog.Size = new System.Drawing.Size(1049, 524);
 			this.textBoxLog.TabIndex = 0;
 			// 
 			// tabPageOprions
@@ -829,7 +832,7 @@
 			this.tabPageOprions.Location = new System.Drawing.Point(4, 22);
 			this.tabPageOprions.Name = "tabPageOprions";
 			this.tabPageOprions.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageOprions.Size = new System.Drawing.Size(1055, 505);
+			this.tabPageOprions.Size = new System.Drawing.Size(1055, 530);
 			this.tabPageOprions.TabIndex = 3;
 			this.tabPageOprions.Text = "Options";
 			this.tabPageOprions.UseVisualStyleBackColor = true;
@@ -933,15 +936,51 @@
 			this.toolTip.InitialDelay = 100;
 			this.toolTip.ReshowDelay = 20;
 			// 
-			// label12
+			// tabControlSourceDestination
 			// 
-			this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(706, 35);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(87, 13);
-			this.label12.TabIndex = 19;
-			this.label12.Text = "User + Password";
+			this.tabControlSourceDestination.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tabControlSourceDestination.Controls.Add(this.tabPageMergeSource);
+			this.tabControlSourceDestination.Controls.Add(this.tabPageMergeDestination);
+			this.tabControlSourceDestination.Location = new System.Drawing.Point(4, 6);
+			this.tabControlSourceDestination.Name = "tabControlSourceDestination";
+			this.tabControlSourceDestination.SelectedIndex = 0;
+			this.tabControlSourceDestination.Size = new System.Drawing.Size(1048, 96);
+			this.tabControlSourceDestination.TabIndex = 20;
+			// 
+			// tabPageMergeSource
+			// 
+			this.tabPageMergeSource.Controls.Add(this.textBoxVssIniTheirs);
+			this.tabPageMergeSource.Controls.Add(this.label5);
+			this.tabPageMergeSource.Controls.Add(this.label4);
+			this.tabPageMergeSource.Controls.Add(this.textBoxTheirsUser);
+			this.tabPageMergeSource.Controls.Add(this.textBoxTheirsPwd);
+			this.tabPageMergeSource.Location = new System.Drawing.Point(4, 22);
+			this.tabPageMergeSource.Name = "tabPageMergeSource";
+			this.tabPageMergeSource.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageMergeSource.Size = new System.Drawing.Size(1040, 105);
+			this.tabPageMergeSource.TabIndex = 0;
+			this.tabPageMergeSource.Text = "Merge from (theirs)";
+			this.tabPageMergeSource.UseVisualStyleBackColor = true;
+			// 
+			// tabPageMergeDestination
+			// 
+			this.tabPageMergeDestination.Controls.Add(this.label1);
+			this.tabPageMergeDestination.Controls.Add(this.label12);
+			this.tabPageMergeDestination.Controls.Add(this.textBoxVssIniMine);
+			this.tabPageMergeDestination.Controls.Add(this.textBoxMineUser);
+			this.tabPageMergeDestination.Controls.Add(this.radioButtonVssConnected);
+			this.tabPageMergeDestination.Controls.Add(this.label6);
+			this.tabPageMergeDestination.Controls.Add(this.radioButtonDetached);
+			this.tabPageMergeDestination.Controls.Add(this.textBoxMinePwd);
+			this.tabPageMergeDestination.Controls.Add(this.textBoxDetachedMergeDestination);
+			this.tabPageMergeDestination.Location = new System.Drawing.Point(4, 22);
+			this.tabPageMergeDestination.Name = "tabPageMergeDestination";
+			this.tabPageMergeDestination.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageMergeDestination.Size = new System.Drawing.Size(1040, 70);
+			this.tabPageMergeDestination.TabIndex = 1;
+			this.tabPageMergeDestination.Text = "Merge to (mine)";
+			this.tabPageMergeDestination.UseVisualStyleBackColor = true;
 			// 
 			// Vss3WayMerge
 			// 
@@ -967,6 +1006,11 @@
 			this.tabPageLog.PerformLayout();
 			this.tabPageOprions.ResumeLayout(false);
 			this.tabPageOprions.PerformLayout();
+			this.tabControlSourceDestination.ResumeLayout(false);
+			this.tabPageMergeSource.ResumeLayout(false);
+			this.tabPageMergeSource.PerformLayout();
+			this.tabPageMergeDestination.ResumeLayout(false);
+			this.tabPageMergeDestination.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -1056,6 +1100,9 @@
 		private System.Windows.Forms.DateTimePicker dateTimePickerBaseTime;
 		private System.Windows.Forms.LinkLabel linkLabelScanRules;
 		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.TabControl tabControlSourceDestination;
+		private System.Windows.Forms.TabPage tabPageMergeSource;
+		private System.Windows.Forms.TabPage tabPageMergeDestination;
 	}
 }
 

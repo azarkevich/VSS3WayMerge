@@ -71,7 +71,7 @@
     <Compile Include="Drivers\VssDriver.cs" />
     <Compile Include="ICLRRuntimeInfo.cs" />
     <Compile Include="Interfaces\IErrorNotification.cs" />
-    <Compile Include="Interfaces\IMergeDestinationDriver.cs" />
+    <Compile Include="Drivers\IMergeDestinationDriver.cs" />
     <Compile Include="MergerToolDefinition.cs" />
     <Compile Include="MergerToolsManager.cs" />
     <Compile Include="OperationProgress.cs">
