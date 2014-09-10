@@ -662,7 +662,6 @@ For merge will be used mine base.
 				strTemplate = mtool.Merge;
 			}
 
-
 			var args = strTemplate
 				.Replace("$LEFT$", '"' + (leftPath ?? "") + '"')
 				.Replace("$LTITLE$", leftTitle)
@@ -744,7 +743,7 @@ For merge will be used mine base.
 			}
 
 			// Get a handle to a copy of this form's system (window) menu
-			var hSysMenu = GetSystemMenu(this.Handle, false);
+			var hSysMenu = GetSystemMenu(Handle, false);
 
 			// Add a separator
 			AppendMenu(hSysMenu, MF_SEPARATOR, 0, string.Empty);
