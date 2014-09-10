@@ -146,6 +146,10 @@ namespace Vss3WayMerge.Core
 				{
 					var last = newChanges.Last();
 					var cl = string.Format("{0}	{1}", spec, last.VssVersion);
+					if (newChanges.Any(c => c.Action != VssChangeType.CheckIn && c.Action != VssChangeType.Branched))
+					{
+						cl += "\t" + string.Join(", ", newChanges.Where(c => c.Action != VssChangeType.CheckIn && c.Action != VssChangeType.Branched).Select(c => c.Action.ToString()).Distinct());
+					}
 					ret.Add(cl);
 				}
 			}

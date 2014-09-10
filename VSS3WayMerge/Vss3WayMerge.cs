@@ -49,8 +49,8 @@ namespace Vss3WayMerge
 		readonly SHA1Managed _hash = new SHA1Managed();
 		IMergeDestinationDriver _driver;
 
-		VssSourceDriver _theirsDriver;
-		VssSourceDriver _mineDriver;
+		IMergeDriver _theirsDriver;
+		IMergeDriver _mineDriver;
 
 		public Vss3WayMerge()
 		{
@@ -73,6 +73,8 @@ namespace Vss3WayMerge
 
 			if (!Directory.Exists(_tempDir))
 				Directory.CreateDirectory(_tempDir);
+
+			CheckChanged(null, null);
 		}
 
 		IDisposable StartBulkOperation()
@@ -140,7 +142,8 @@ namespace Vss3WayMerge
 			theirsVss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
 
 			_theirsDriver = new VssSourceDriver(theirsVss, true);
-			_mineDriver = new VssSourceDriver(mineVss, false);
+			//_mineDriver = new VssSourceDriver(mineVss, false);
+			_mineDriver = new DetachedMergeDriver(@"c:\work\gf.trunk");
 
 			// start driver
 			if (radioButtonVssConnected.Checked)
@@ -149,7 +152,7 @@ namespace Vss3WayMerge
 			}
 			else if (radioButtonDetached.Checked)
 			{
-				_driver = new DetachedDriver(this, textBoxDetachedMergeDestination.Text);
+				_driver = new DetachedMergeDestinationDriver(this, textBoxDetachedMergeDestination.Text);
 			}
 
 			if (_driver == null || !_driver.InitDriver())
@@ -279,7 +282,7 @@ For merge will be used mine base.
 				if (ca.TheirsBasePath != null && ca.MineBasePath != null)
 					return CompareBases(ca);
 
-				return ca.MineBasePath != null;
+				return true;
 			}
 			catch (Exception ex)
 			{
@@ -589,7 +592,7 @@ For merge will be used mine base.
 		{
 			var ca = GetFocusedMergeableItem();
 
-			if (ca != null && EnsureTheirsBase(ca) && EnsureMineBase(ca))
+			if (ca != null && EnsureTheirsBase(ca) && EnsureMineBase(ca) && ca.MineBasePath != null)
 			{
 				Start2Diff(ca.TheirsBasePath, "Theirs Base " + GetTheirsName(), ca.MineBasePath, "Mine Base " + GetMineName());
 			}
@@ -845,7 +848,7 @@ For merge will be used mine base.
 		{
 			var ca = GetFocusedMergeableItem();
 
-			if (ca != null && EnsureMine(ca) && EnsureTheirs(ca) && EnsureMineBase(ca) && EnsureTheirsBase(ca))
+			if (ca != null && EnsureMine(ca) && EnsureTheirs(ca) && EnsureTheirsBase(ca) && EnsureMineBase(ca))
 			{
 				Start3Diff(ca);
 			}
@@ -1346,7 +1349,6 @@ For merge will be used mine base.
 		}
 
 		readonly Dictionary<int, bool> _sortOrder = new Dictionary<int, bool>();
-		private readonly TempManager _tempManager;
 
 		void listViewChanged_ColumnClick(object sender, ColumnClickEventArgs e)
 		{
@@ -1537,6 +1539,17 @@ For merge will be used mine base.
 
 			if (!string.IsNullOrWhiteSpace(Settings.Default.ScanRules))
 				linkLabelScanRules.Text = "* " + linkLabelScanRules.Text;
+		}
+
+		void CheckChanged(object sender, EventArgs e)
+		{
+			textBoxVssIniMine.Enabled = radioButtonMineFromVss.Checked;
+			textBoxMineUser.Enabled = radioButtonMineFromVss.Checked;
+			textBoxMinePwd.Enabled = radioButtonMineFromVss.Checked;
+
+			textBoxMineDetachedDir.Enabled = radioButtonMineFromDetached.Checked;
+
+			textBoxDetachedMergeDestination.Enabled = radioButtonDetached.Checked;
 		}
 	}
 }

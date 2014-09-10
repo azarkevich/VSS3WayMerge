@@ -15,34 +15,30 @@ namespace Vss3WayMerge.Drivers
 			_theirsSide = theirsSide;
 		}
 
-		public void InitHead(VssChangeAtom ca)
+		int GetHeadVersion(VssChangeAtom ca)
+		{
+			return _theirsSide ? ca.TheirsHead : ca.MineHead;
+		}
+
+		void SetHeadVersion(VssChangeAtom ca, int head)
 		{
 			if (_theirsSide)
-			{
-				if (ca.TheirsHead == 0)
-					ca.TheirsHead = _db.VSSItem[ca.Spec].VersionNumber;
-
-				ca.TheirsPath = LoadContent(ca, "theirs", ca.TheirsHead);
-			}
+				ca.TheirsHead = head;
 			else
-			{
-				if (ca.MineHead == 0)
-					ca.MineHead = _db.VSSItem[ca.Spec].VersionNumber;
+				ca.MineHead = head;
+		}
 
-				ca.MinePath = LoadContent(ca, "mine", ca.MineHead);
-			}
+		public void InitHead(VssChangeAtom ca)
+		{
+			if (GetHeadVersion(ca) == 0)
+				SetHeadVersion(ca, _db.VSSItem[ca.Spec].VersionNumber);
+
+			ca.TheirsPath = LoadContent(ca, _theirsSide ? "theirs": "mine", ca.TheirsHead);
 		}
 
 		public void InitBase(VssChangeAtom ca)
 		{
-			if (_theirsSide)
-			{
-				ca.TheirsBasePath = LoadContent(ca, "base.of.theirs", ca.BaseVersion);
-			}
-			else
-			{
-				ca.MineBasePath = LoadContent(ca, "base.of.mine", ca.BaseVersion);
-			}
+			ca.TheirsBasePath = LoadContent(ca, _theirsSide ? "base.of.theirs" : "base.of.mine", ca.BaseVersion);
 		}
 
 		string LoadContent(VssChangeAtom ca, string infix, int version = -1)

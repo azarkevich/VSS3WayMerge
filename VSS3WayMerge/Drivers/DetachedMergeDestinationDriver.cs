@@ -4,12 +4,12 @@ using Vss3WayMerge.Interfaces;
 
 namespace Vss3WayMerge.Drivers
 {
-	class DetachedDriver : IMergeDestinationDriver
+	class DetachedMergeDestinationDriver : IMergeDestinationDriver
 	{
 		readonly IErrorNotification _errNotify;
 		readonly string _mergeDestination;
 
-		public DetachedDriver(IErrorNotification errNotify, string destinationRoot)
+		public DetachedMergeDestinationDriver(IErrorNotification errNotify, string destinationRoot)
 		{
 			_errNotify = errNotify;
 			_mergeDestination = (destinationRoot ?? "").Replace('/', '\\');

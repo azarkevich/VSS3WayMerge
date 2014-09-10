@@ -67,7 +67,8 @@
     <Compile Include="Core\FileCache.cs" />
     <Compile Include="Core\ScanForBaseline.cs" />
     <Compile Include="Core\VssFileCache.cs" />
-    <Compile Include="Drivers\DetachedDriver.cs" />
+    <Compile Include="Drivers\DetachedMergeDestinationDriver.cs" />
+    <Compile Include="Drivers\DetachedMergeDriver.cs" />
     <Compile Include="Drivers\IMergeDriver.cs" />
     <Compile Include="Drivers\VssDriver.cs" />
     <Compile Include="Drivers\VssSourceDriver.cs" />
