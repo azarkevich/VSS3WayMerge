@@ -72,6 +72,12 @@
     <Compile Include="Drivers\IMergeDriver.cs" />
     <Compile Include="Drivers\VssDriver.cs" />
     <Compile Include="Drivers\VssSourceDriver.cs" />
+    <Compile Include="EditSpecs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditSpecs.Designer.cs">
+      <DependentUpon>EditSpecs.cs</DependentUpon>
+    </Compile>
     <Compile Include="ICLRRuntimeInfo.cs" />
     <Compile Include="Interfaces\IErrorNotification.cs" />
     <Compile Include="Drivers\IMergeDestinationDriver.cs" />
@@ -115,6 +121,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditSpecs.resx">
+      <DependentUpon>EditSpecs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OperationProgress.resx">
       <DependentUpon>OperationProgress.cs</DependentUpon>

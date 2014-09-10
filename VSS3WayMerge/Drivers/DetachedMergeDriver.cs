@@ -15,7 +15,7 @@ namespace Vss3WayMerge.Drivers
 		public void InitHead(VssChangeAtom ca)
 		{
 			// rel to merge destination root
-			var relPath = ca.Spec.TrimStart("$/".ToCharArray()).Replace('/', '\\');
+			var relPath = ca.MineSpecSafe.TrimStart("$/".ToCharArray()).Replace('/', '\\');
 			var path = Path.Combine(_baseDir, relPath);
 
 			// can be only mine

@@ -34,7 +34,7 @@ namespace Vss3WayMerge.Drivers
 		public void Init(VssChangeAtom ca)
 		{
 			// rel to merge destination root
-			var mp = Path.Combine(_mergeDestination, ca.Spec.TrimStart("$/".ToCharArray()).Replace('/', '\\'));
+			var mp = Path.Combine(_mergeDestination, ca.MineSpecSafe.TrimStart("$/".ToCharArray()).Replace('/', '\\'));
 
 			if(File.Exists(mp))
 				ca.MergedPath = mp;
@@ -55,7 +55,7 @@ namespace Vss3WayMerge.Drivers
 			}
 			catch (Exception ex)
 			{
-				_errNotify.NotifyError(ex.Message, ca.Spec, "Reset");
+				_errNotify.NotifyError(ex.Message, ca.MineSpecSafe, "Reset");
 				ca.Status = Status.Error;
 				ca.StatusDetails = "Reset: " + ex.Message;
 			}
@@ -69,7 +69,7 @@ namespace Vss3WayMerge.Drivers
 					return true;
 
 				// rel to merge destination root
-				ca.MergedPath = Path.Combine(_mergeDestination, ca.Spec.TrimStart("$/".ToCharArray()).Replace('/', '\\'));
+				ca.MergedPath = Path.Combine(_mergeDestination, ca.MineSpecSafe.TrimStart("$/".ToCharArray()).Replace('/', '\\'));
 				var dir = Path.GetDirectoryName(ca.MergedPath);
 				if (!Directory.Exists(dir))
 					Directory.CreateDirectory(dir);
@@ -78,7 +78,7 @@ namespace Vss3WayMerge.Drivers
 			}
 			catch (Exception ex)
 			{
-				_errNotify.NotifyError(ex.Message, ca.Spec, "Merge Destination");
+				_errNotify.NotifyError(ex.Message, ca.MineSpecSafe, "Merge Destination");
 				ca.Status = Status.Error;
 				ca.StatusDetails = "Merge destination: " + ex.Message;
 				return false;

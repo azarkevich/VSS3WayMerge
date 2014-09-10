@@ -43,7 +43,7 @@ namespace Vss3WayMerge.Drivers
 		{
 			try
 			{
-				var item = _vss.VSSItem[ca.Spec];
+				var item = _vss.VSSItem[ca.MineSpecSafe];
 
 				if (item.Type == 0 || item.IsCheckedOut == 0)
 					return;
@@ -64,7 +64,7 @@ namespace Vss3WayMerge.Drivers
 				if (ex.Message.Contains("File or project not found"))
 					return;
 
-				_errNotify.NotifyError(ex.Message, ca.Spec, "Get Checkout Status");
+				_errNotify.NotifyError(ex.Message, ca.MineSpecSafe, "Get Checkout Status");
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace Vss3WayMerge.Drivers
 
 			try
 			{
-				var item = _vss.VSSItem[ca.Spec];
+				var item = _vss.VSSItem[ca.MineSpecSafe];
 
 				var co = item.Checkouts
 					.Cast<VSSCheckout>()
@@ -92,7 +92,7 @@ namespace Vss3WayMerge.Drivers
 			}
 			catch (Exception ex)
 			{
-				_errNotify.NotifyError(ex.Message, ca.Spec, "Reset");
+				_errNotify.NotifyError(ex.Message, ca.MineSpecSafe, "Reset");
 				ca.Status = Status.Error;
 				ca.StatusDetails = "Reset: " + ex.Message;
 			}
@@ -105,7 +105,7 @@ namespace Vss3WayMerge.Drivers
 
 			try
 			{
-				var item = _vss.VSSItem[ca.Spec];
+				var item = _vss.VSSItem[ca.MineSpecSafe];
 
 				// try find already existing checkout
 				var co = item.Checkouts
@@ -127,7 +127,7 @@ namespace Vss3WayMerge.Drivers
 			}
 			catch (Exception ex)
 			{
-				_errNotify.NotifyError(ex.Message, ca.Spec, "Checkout merge destination");
+				_errNotify.NotifyError(ex.Message, ca.MineSpecSafe, "Checkout merge destination");
 				ca.Status = Status.Error;
 				ca.StatusDetails = "Checkout Merge Destination: " + ex.Message;
 				return false;

@@ -117,46 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="contextMenuStripDiffs.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>22, 9</value>
-  </metadata>
-  <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>195, 9</value>
-  </metadata>
-  <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>195, 9</value>
-  </metadata>
-  <data name="radioButtonVssConnected.ToolTip" xml:space="preserve">
-    <value>WARNING:
-
-Possibility of lose uncommited changes for mine VSS database.
-
-During 'merge' utility checkout item and write merged output.
-Reset lead to undo checkout.
-
-Ensure that all important modification checked-in or in safe palce.</value>
-  </data>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>70</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAEBAAAAAAGABoAwAAFgAAACgAAAAQAAAAIAAAAAEAGAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAA
-        AAChhm2hhm0AAAAAAACCbFihhm2MdGKNdGGagWqhhm2hhm0AAAAAAAB1Yk+hhm2hhm2cgmuSemiOdmWL
-        c2GIcF6IcF6Kcl+7ppp0W0ZwVkJ3Xkt0WkdyWEVvVUKdgmuhhm2YgnHUxLzNua/JtKrAqJzAqJyKcmDL
-        t6y2nY6li3xxV0JtUz+jjXyLc2BxV0ObgmqdhnbWxr2okoOmj4CjjXyjjXyLc2HNu7C7oZS0moutkoKd
-        g3JuVD9qUDychXVyV0Ohi3rXx7+rlYaj4/hz0vJXx/CMdGLQvbS/p5q4npCxl4eqj3+liXltVD+chXVo
-        TTmlj3/YysKtmYksrOGE1/VCwfGNdWPTwrnDq5+9pJY8NHyuk4WojXxyWESchXVqTzqpk4Pay8Swm4xg
-        zvMip98Bl9iOdmTXxr3GsKR1dbcmLcwyKnGskYF2XEichXVrUDytl4jbzcazno9gzvMzve4Bl9iPd2XZ
-        y8TKtaqIi8yHiuNHQoewlYZ6YE2chXVsUT2xnI3cz8e1oZJfz/Myve4Bl9iUfWve0MnYyMDHsqZ/gcO8
-        opS0mot+ZVKchXVtVD+0oJHd0Mq3o5RgzvMzve4Bl9gBl9iginmbhHTIuK7VxbzGsKW4n5GCalechXVv
-        VUG4pJXf08y6pZdgzvMzve8Bl9gBl9gBl9gBl9iXgHCSe2nEsqfPvbSHb12chXVxV0O7p5nh1M60o5i0
-        o5i0o5i0o5i0o5i0o5i0o5i0o5i0o5iOdmWJcV6MdGKchXVyWUa/qp3f0svi19Df0szbz8bYysPXx77U
-        xLzRwbfPvbTMurDKtqy3o5SRemichXV0W0eli3W/q53g1M7Uw7vQvrTNua7Is6nFr6PCq56+ppm6oZS2
-        nI6zmYmgh3achXV2XUmeg2uli3XArJ7bzMXSwLfOurDLtqrHsKXDrKDAqJy8o5a4npG0mouwloadhHJ4
-        X0ydg2qdg2qkinXBrZ++qp28qJq6pZa3opO1oJCynY6vmYusl4eok4OmkICijX2ZfmYAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-</value>
-  </data>
 </root>

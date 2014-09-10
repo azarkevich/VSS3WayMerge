@@ -135,22 +135,36 @@ namespace Vss3WayMerge
 			if (mineSsIni == null)
 				return;
 
-			var mineVss = new VSSDatabase();
-			mineVss.Open(mineSsIni, textBoxMineUser.Text, textBoxMinePwd.Text);
+			if (!radioButtonMineFromVss.Checked && !radioButtonDetached.Checked)
+			{
+				ShowError("Destination can't be bound to mine VSS when mine used detached source");
+				return;
+			}
 
 			var theirsVss = new VSSDatabase();
 			theirsVss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
 
 			_theirsDriver = new VssSourceDriver(theirsVss, true);
-			//_mineDriver = new VssSourceDriver(mineVss, false);
-			_mineDriver = new DetachedMergeDriver(@"c:\work\gf.trunk");
 
-			// start driver
-			if (radioButtonVssConnected.Checked)
+			if (radioButtonMineFromVss.Checked)
 			{
-				_driver = new VssDriver(this, mineVss);
+				var mineVss = new VSSDatabase();
+				mineVss.Open(mineSsIni, textBoxMineUser.Text, textBoxMinePwd.Text);
+
+				_mineDriver = new VssSourceDriver(mineVss, false);
+
+				// start destination driver
+				if (radioButtonVssConnected.Checked)
+				{
+					_driver = new VssDriver(this, mineVss);
+				}
 			}
-			else if (radioButtonDetached.Checked)
+			else
+			{
+				_mineDriver = new DetachedMergeDriver(textBoxMineDetachedDir.Text);
+			}
+			
+			if (radioButtonDetached.Checked)
 			{
 				_driver = new DetachedMergeDestinationDriver(this, textBoxDetachedMergeDestination.Text);
 			}
@@ -288,7 +302,7 @@ For merge will be used mine base.
 			{
 				if (!_bulkOperation)
 				{
-					ShowError(ex.Message, ca.Spec, "MineBase");
+					ShowError(ex.Message, ca.MineSpecSafe, "MineBase");
 				}
 
 				ca.Status = Status.Error;
@@ -343,7 +357,7 @@ For merge will be used mine base.
 			{
 				if (!_bulkOperation)
 				{
-					ShowError(ex.Message, ca.Spec, "Mine");
+					ShowError(ex.Message, ca.MineSpecSafe, "Mine");
 				}
 
 				ca.Status = Status.Error;
@@ -502,7 +516,7 @@ For merge will be used mine base.
 				.Select(ca => {
 					EnsureMineBase(ca);
 					EnsureMine(ca);
-					return Tuple.Create(ca.MineBasePath, ca.MinePath);
+					return Tuple.Create(ca.MineBasePath ?? ca.TheirsBasePath, ca.MinePath);
 				})
 				.ToArray()
 			;
@@ -794,28 +808,6 @@ For merge will be used mine base.
 					ca.Status = Status.Error;
 					ca.StatusDetails = ex.Message;
 				}
-				/*
-				try
-				{
-					var item = _mineVss.VSSItem[ca.Spec];
-
-					if (item.IsCheckedOut != 0)
-					{
-						// replace content with mine head
-						item.UndoCheckout();
-
-						ca.MergedPath = null;
-
-						selectedItem.SubItems[5].Text = "";
-					}
-					selectedItem.SubItems[4].Text = "Mine";
-				}
-				catch (Exception ex)
-				{
-					if (MessageBox.Show("Item " + ca.Spec + " error:\n" + ex.Message, "Error", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-						return;
-				}
-				*/
 			}
 
 			listViewChanged.Refresh();
@@ -900,6 +892,15 @@ For merge will be used mine base.
 			_bulkOperation = selected.Length > 1;
 
 			return selected;
+		}
+
+		VssChangeAtom[] GetSelectedItems()
+		{
+			return listViewChanged.SelectedIndices
+				.Cast<int>()
+				.Select(i => _listItems[i])
+				.ToArray()
+			;
 		}
 
 		void mergeNoninteractiveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1550,6 +1551,91 @@ For merge will be used mine base.
 			textBoxMineDetachedDir.Enabled = radioButtonMineFromDetached.Checked;
 
 			textBoxDetachedMergeDestination.Enabled = radioButtonDetached.Checked;
+		}
+
+		void changeMinePathToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var cas = GetSelectedItems().ToList();
+
+			var dlg = new EditSpecs(string.Join("\r\n", cas.Select(ca => ca.MineSpecSafe)));
+
+			if(dlg.ShowDialog() != DialogResult.OK)
+				return;
+
+			var specs = dlg.Specs.Split('\n', '\r').Select(s => s.Trim()).Where(s => s != "").ToArray();
+
+			if(specs.Length != 0 && specs.Length != cas.Count)
+			{
+				ShowError("Edoited specs list should be either empty (reset) or contains same count of lines as before edit");
+				return;
+			}
+
+			cas.ForEach(ca => {
+				_driver.Reset(ca);
+				ca.MineHead = 0;
+				ca.MinePath = null;
+				ca.MineBasePath = null;
+			});
+
+			for (int i = 0; i < cas.Count; i++)
+			{
+				cas[i].MineSpec = specs[i];
+			}
+
+			listViewChanged.Refresh();
+		}
+
+		void resetUnmergeableStatusToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			GetSelectedItems().ToList().ForEach(ca => { ca.Status = Status.Nothing; ca.StatusDetails = null; });
+			listViewChanged.Refresh();
+		}
+
+		void copyTheirsToMergeDestinationToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var cas = GetSelectedItems().ToList();
+
+			using(StartBulkOperation())
+			{
+				foreach (var ca in cas)
+				{
+					if (!EnsureTheirs(ca))
+						continue;
+
+					_driver.EnsureMergeDestination(ca);
+
+					try
+					{
+						File.Copy(ca.TheirsPath, ca.MergedPath, true);
+						File.SetAttributes(ca.MergedPath, FileAttributes.Normal);
+						ca.Status = Status.ResolvedAsTheirs;
+						ca.StatusDetails = "Copied to destination";
+					}
+					catch(Exception ex)
+					{
+						ca.Status = Status.Error;
+						ca.StatusDetails = ex.Message;
+					}
+				}
+			}
+			listViewChanged.Refresh();
+		}
+
+		void toolStripMenuItem2_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < _listItems.Count; i++)
+			{
+				var ca = _listItems[i];
+				if (ca.Status == Status.Merged || ca.Status == Status.MergedNoChanges || ca.Status == Status.ResolvedAsMine || ca.Status == Status.ResolvedAsTheirs)
+				{
+					_listItems.RemoveAt(i--);
+					_listItemsNonFiltered.Remove(ca);
+				}
+			}
+
+			listViewChanged.VirtualListSize = _listItems.Count;
+			listViewChanged.SelectedIndices.Clear();
+			listViewChanged.Refresh();
 		}
 	}
 }

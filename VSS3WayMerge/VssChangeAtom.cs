@@ -3,6 +3,14 @@
 	class VssChangeAtom
 	{
 		public string Spec;
+		public string MineSpec;
+		public string MineSpecSafe
+		{
+			get
+			{
+				return MineSpec ?? Spec;
+			}
+		}
 
 		public bool BasesDiffer;
 		public int BaseVersion;

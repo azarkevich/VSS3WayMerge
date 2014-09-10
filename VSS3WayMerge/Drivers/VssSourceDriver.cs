@@ -15,6 +15,11 @@ namespace Vss3WayMerge.Drivers
 			_theirsSide = theirsSide;
 		}
 
+		string GetSpec(VssChangeAtom ca)
+		{
+			return _theirsSide ? ca.Spec : ca.MineSpecSafe;
+		}
+
 		int GetHeadVersion(VssChangeAtom ca)
 		{
 			return _theirsSide ? ca.TheirsHead : ca.MineHead;
@@ -31,7 +36,7 @@ namespace Vss3WayMerge.Drivers
 		public void InitHead(VssChangeAtom ca)
 		{
 			if (GetHeadVersion(ca) == 0)
-				SetHeadVersion(ca, _db.VSSItem[ca.Spec].VersionNumber);
+				SetHeadVersion(ca, _db.VSSItem[GetSpec(ca)].VersionNumber);
 
 			ca.TheirsPath = LoadContent(ca, _theirsSide ? "theirs": "mine", ca.TheirsHead);
 		}
@@ -43,7 +48,9 @@ namespace Vss3WayMerge.Drivers
 
 		string LoadContent(VssChangeAtom ca, string infix, int version = -1)
 		{
-			var item = _db.VSSItem[ca.Spec];
+			var spec = GetSpec(ca);
+
+			var item = _db.VSSItem[spec];
 
 			if (version != -1)
 			{
@@ -56,7 +63,7 @@ namespace Vss3WayMerge.Drivers
 				}
 			}
 
-			var localSpec = Path.Combine(ca.TempDir, Path.GetFileNameWithoutExtension(ca.Spec) + "." + infix + Path.GetExtension(ca.Spec));
+			var localSpec = Path.Combine(ca.TempDir, Path.GetFileNameWithoutExtension(spec) + "." + infix + Path.GetExtension(spec));
 
 			item.Get(localSpec, (int)VSSFlags.VSSFLAG_FORCEDIRNO | (int)VSSFlags.VSSFLAG_USERRONO | (int)VSSFlags.VSSFLAG_REPREPLACE);
 
