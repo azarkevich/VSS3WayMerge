@@ -68,7 +68,9 @@
     <Compile Include="Core\ScanForBaseline.cs" />
     <Compile Include="Core\VssFileCache.cs" />
     <Compile Include="Drivers\DetachedDriver.cs" />
+    <Compile Include="Drivers\IMergeDriver.cs" />
     <Compile Include="Drivers\VssDriver.cs" />
+    <Compile Include="Drivers\VssSourceDriver.cs" />
     <Compile Include="ICLRRuntimeInfo.cs" />
     <Compile Include="Interfaces\IErrorNotification.cs" />
     <Compile Include="Drivers\IMergeDestinationDriver.cs" />
@@ -87,6 +89,7 @@
       <DependentUpon>ScanRules.cs</DependentUpon>
     </Compile>
     <Compile Include="Status.cs" />
+    <Compile Include="TempManager.cs" />
     <Compile Include="Tools\CancellableWait.cs">
       <SubType>Form</SubType>
     </Compile>

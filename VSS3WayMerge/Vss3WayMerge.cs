@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Runtime.InteropServices;
@@ -48,6 +49,9 @@ namespace Vss3WayMerge
 		readonly SHA1Managed _hash = new SHA1Managed();
 		IMergeDestinationDriver _driver;
 
+		VssSourceDriver _theirsDriver;
+		VssSourceDriver _mineDriver;
+
 		public Vss3WayMerge()
 		{
 			InitializeComponent();
@@ -60,59 +64,12 @@ namespace Vss3WayMerge
 			if (!Directory.Exists(rootTempDir))
 				Directory.CreateDirectory(rootTempDir);
 
-			_tempDir = Path.Combine(rootTempDir, Process.GetCurrentProcess().Id.ToString());
-
-			PrepareTemp(rootTempDir);
+			_tempDir = Path.Combine(rootTempDir, Process.GetCurrentProcess().Id.ToString(CultureInfo.InvariantCulture));
 
 			if (!string.IsNullOrWhiteSpace(Settings.Default.ScanRules))
 				linkLabelScanRules.Text = "* " + linkLabelScanRules.Text;
-		}
 
-		void PrepareTemp(string rootTempDir)
-		{
-			var thisProcessId = Process.GetCurrentProcess().Id;
-
-			// silently clear previous temp files
-			foreach (var fse in Directory.EnumerateFileSystemEntries(rootTempDir))
-			{
-				try
-				{
-					if (File.Exists(fse))
-					{
-						File.SetAttributes(fse, FileAttributes.Normal);
-						File.Delete(fse);
-					}
-					else if (Directory.Exists(fse))
-					{
-						var dirName = Path.GetFileName(fse);
-						int id;
-						if (Int32.TryParse(dirName, out id) && id != thisProcessId)
-						{
-							// do not delete temp of already running instances
-							try
-							{
-								var p = Process.GetProcessById(id);
-								if (!p.HasExited)
-									continue;
-							}
-							catch
-							{
-							}
-						}
-
-						foreach (var subfse in Directory.EnumerateFileSystemEntries(fse, "*.*", SearchOption.AllDirectories))
-						{
-							if (File.Exists(subfse))
-								File.SetAttributes(subfse, FileAttributes.Normal);
-						}
-
-						Directory.Delete(fse, true);
-					}
-				}
-				catch
-				{
-				}
-			}
+			new TempManager().PrepareTemp(rootTempDir);
 
 			if (!Directory.Exists(_tempDir))
 				Directory.CreateDirectory(_tempDir);
@@ -124,9 +81,6 @@ namespace Vss3WayMerge
 
 			return Disposable.Create(() => _bulkOperation = false);
 		}
-
-		VSSDatabase _mineVss;
-		VSSDatabase _theirsVss;
 
 		List<VssChangeAtom> _listItems = new List<VssChangeAtom>();
 		List<VssChangeAtom> _listItemsNonFiltered = new List<VssChangeAtom>();
@@ -159,16 +113,16 @@ namespace Vss3WayMerge
 			// cleanup
 			textBoxLog.Clear();
 
-			if (_mineVss != null)
+			if (_mineDriver != null)
 			{
-				_mineVss.Close();
-				_mineVss = null;
+				_mineDriver.Dispose();
+				_mineDriver = null;
 			}
 
-			if (_theirsVss != null)
+			if (_theirsDriver != null)
 			{
-				_theirsVss.Close();
-				_theirsVss = null;
+				_theirsDriver.Dispose();
+				_theirsDriver = null;
 			}
 
 			var theirsSsIni = GetIniPath(textBoxVssIniTheirs.Text, "'theirs'");
@@ -179,16 +133,19 @@ namespace Vss3WayMerge
 			if (mineSsIni == null)
 				return;
 
-			_mineVss = new VSSDatabase();
-			_mineVss.Open(mineSsIni, textBoxMineUser.Text, textBoxMinePwd.Text);
+			var mineVss = new VSSDatabase();
+			mineVss.Open(mineSsIni, textBoxMineUser.Text, textBoxMinePwd.Text);
 
-			_theirsVss = new VSSDatabase();
-			_theirsVss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
+			var theirsVss = new VSSDatabase();
+			theirsVss.Open(theirsSsIni, textBoxTheirsUser.Text, textBoxTheirsPwd.Text);
+
+			_theirsDriver = new VssSourceDriver(theirsVss, true);
+			_mineDriver = new VssSourceDriver(mineVss, false);
 
 			// start driver
 			if (radioButtonVssConnected.Checked)
 			{
-				_driver = new VssDriver(this, _mineVss);
+				_driver = new VssDriver(this, mineVss);
 			}
 			else if (radioButtonDetached.Checked)
 			{
@@ -253,10 +210,7 @@ namespace Vss3WayMerge
 				var mineHash = _hash.ComputeHash(mineStream);
 				var theirsHash = _hash.ComputeHash(theirsStream);
 
-				var mineHashS = Convert.ToBase64String(mineHash);
-				var theirsHashS = Convert.ToBase64String(theirsHash);
-
-				if (mineHashS != theirsHashS)
+				if(!mineHash.SequenceEqual(theirsHash))
 				{
 					ca.BasesDiffer = true;
 					if (!_bulkOperation)
@@ -281,18 +235,20 @@ For merge will be used mine base.
 
 		bool EnsureTheirsBase(VssChangeAtom ca)
 		{
+			if (ca.TheirsBasePath != null)
+				return true;
+
 			try
 			{
-				if (ca.TheirsBasePath == null)
-				{
-					if (!EnsureTempPath(ca))
-						return false;
+				if (!EnsureTempPath(ca))
+					return false;
 
-					ca.TheirsBasePath = LoadContent(ca, _theirsVss, ca.Spec, ca.TempDir, "base.of.theirs", ca.BaseVersion);
+				_theirsDriver.InitBase(ca);
 
-					if (ca.MineBasePath != null && ca.TheirsBasePath != null)
-						return CompareBases(ca);
-				}
+				if (ca.MineBasePath != null && ca.TheirsBasePath != null)
+					return CompareBases(ca);
+
+				return ca.TheirsBasePath != null;
 			}
 			catch (Exception ex)
 			{
@@ -306,23 +262,24 @@ For merge will be used mine base.
 
 				return false;
 			}
-			return ca.TheirsBasePath != null;
 		}
 
 		bool EnsureMineBase(VssChangeAtom ca)
 		{
+			if (ca.MineBasePath != null)
+				return true;
+
 			try
 			{
-				if (ca.MineBasePath == null)
-				{
-					if (!EnsureTempPath(ca))
-						return false;
+				if (!EnsureTempPath(ca))
+					return false;
 
-					ca.MineBasePath = LoadContent(ca, _mineVss, ca.Spec, ca.TempDir, "base.of.mine", ca.BaseVersion);
+				_mineDriver.InitBase(ca);
 
-					if (ca.TheirsBasePath != null && ca.MineBasePath != null)
-						return CompareBases(ca);
-				}
+				if (ca.TheirsBasePath != null && ca.MineBasePath != null)
+					return CompareBases(ca);
+
+				return ca.MineBasePath != null;
 			}
 			catch (Exception ex)
 			{
@@ -336,7 +293,6 @@ For merge will be used mine base.
 
 				return false;
 			}
-			return ca.MineBasePath != null;
 		}
 
 		bool EnsureTheirs(VssChangeAtom ca)
@@ -349,10 +305,7 @@ For merge will be used mine base.
 				if (!EnsureTempPath(ca))
 					return false;
 
-				if (ca.TheirsHead == 0)
-					ca.TheirsHead = _theirsVss.VSSItem[ca.Spec].VersionNumber;
-
-				ca.TheirsPath = LoadContent(ca, _theirsVss, ca.Spec, ca.TempDir, "theirs", ca.TheirsHead);
+				_theirsDriver.InitHead(ca);
 
 				return ca.TheirsPath != null;
 			}
@@ -379,10 +332,7 @@ For merge will be used mine base.
 				if (!EnsureTempPath(ca))
 					return false;
 
-				if (ca.MineHead == 0)
-					ca.MineHead = _mineVss.VSSItem[ca.Spec].VersionNumber;
-
-				ca.MinePath = LoadContent(ca, _mineVss, ca.Spec, ca.TempDir, "mine", ca.MineHead);
+				_mineDriver.InitHead(ca);
 
 				return ca.MinePath != null;
 			}
@@ -454,41 +404,6 @@ For merge will be used mine base.
 			AddLog("", false);
 
 			MessageBox.Show(this, sb.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-		}
-
-		string LoadContent(VssChangeAtom ca, IVSSDatabase vss, string spec, string temp, string infix, int version = -1)
-		{
-			var item = vss.VSSItem[spec];
-
-			if (version != -1)
-			{
-				if (item.VersionNumber != version)
-				{
-					if (item.VersionNumber < version)
-					{
-						var err = string.Format("Verson {0} as '{1}' absent. Head version: {2}", version, infix, item.VersionNumber);
-						if (_bulkOperation)
-						{
-							ca.Status = Status.Error;
-							ca.StatusDetails = err;
-						}
-						else
-						{
-							ShowError(err, spec, vss.SrcSafeIni);
-						}
-						return null;
-					}
-					item = item.Version[version];
-				}
-			}
-
-			var localSpec = Path.Combine(temp, Path.GetFileNameWithoutExtension(spec) + "." + infix + Path.GetExtension(spec));
-
-			item.Get(localSpec, (int)VSSFlags.VSSFLAG_FORCEDIRNO | (int)VSSFlags.VSSFLAG_USERRONO | (int)VSSFlags.VSSFLAG_REPREPLACE);
-
-			File.SetAttributes(localSpec, FileAttributes.ReadOnly);
-
-			return localSpec;
 		}
 
 		public string GetIniPath(string enteredValue, string hint)
@@ -1431,6 +1346,7 @@ For merge will be used mine base.
 		}
 
 		readonly Dictionary<int, bool> _sortOrder = new Dictionary<int, bool>();
+		private readonly TempManager _tempManager;
 
 		void listViewChanged_ColumnClick(object sender, ColumnClickEventArgs e)
 		{
