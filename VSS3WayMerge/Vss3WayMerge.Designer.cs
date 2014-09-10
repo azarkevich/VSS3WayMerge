@@ -99,6 +99,7 @@
 			this.resetUnmergeableStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
 			this.excludeFromListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -125,7 +126,6 @@
 			this.comboBoxMerger = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabControl.SuspendLayout();
 			this.tabPageForMergeFiles.SuspendLayout();
 			this.tabControlSourceDestination.SuspendLayout();
@@ -509,20 +509,21 @@
 			// 
 			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(1001, 11);
+			this.label3.Location = new System.Drawing.Point(1034, 11);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(60, 13);
+			this.label3.Size = new System.Drawing.Size(56, 13);
 			this.label3.TabIndex = 4;
-			this.label3.Text = "Base point:";
+			this.label3.Text = "Split point:";
 			// 
 			// dateTimePickerBaseDate
 			// 
 			this.dateTimePickerBaseDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.dateTimePickerBaseDate.Location = new System.Drawing.Point(1067, 8);
+			this.dateTimePickerBaseDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+			this.dateTimePickerBaseDate.Location = new System.Drawing.Point(1114, 8);
 			this.dateTimePickerBaseDate.Name = "dateTimePickerBaseDate";
-			this.dateTimePickerBaseDate.Size = new System.Drawing.Size(147, 20);
+			this.dateTimePickerBaseDate.Size = new System.Drawing.Size(100, 20);
 			this.dateTimePickerBaseDate.TabIndex = 3;
-			this.dateTimePickerBaseDate.Value = new System.DateTime(2013, 9, 1, 0, 0, 0, 0);
+			this.dateTimePickerBaseDate.Value = new System.DateTime(2013, 1, 17, 0, 0, 0, 0);
 			// 
 			// textBoxScanProject
 			// 
@@ -667,7 +668,7 @@
             this.filterToolStripMenuItem,
             this.moreToolStripMenuItem});
 			this.contextMenuStripDiffs.Name = "contextMenuStripDiffs";
-			this.contextMenuStripDiffs.Size = new System.Drawing.Size(259, 342);
+			this.contextMenuStripDiffs.Size = new System.Drawing.Size(259, 320);
 			this.contextMenuStripDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDiffs_Opening);
 			// 
 			// mergeNonInteractiveToolStripMenuItem
@@ -837,6 +838,13 @@
 			this.excludeFromListToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
 			this.excludeFromListToolStripMenuItem.Text = "Remove from list";
 			this.excludeFromListToolStripMenuItem.Click += new System.EventHandler(this.excludeFromListToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(258, 22);
+			this.toolStripMenuItem2.Text = "Remove resolved";
+			this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
 			// 
 			// toolStripSeparator6
 			// 
@@ -1073,13 +1081,6 @@
 			this.toolTip.AutoPopDelay = 10000;
 			this.toolTip.InitialDelay = 100;
 			this.toolTip.ReshowDelay = 20;
-			// 
-			// toolStripMenuItem2
-			// 
-			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(258, 22);
-			this.toolStripMenuItem2.Text = "Remove resolved";
-			this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
 			// 
 			// Vss3WayMerge
 			// 

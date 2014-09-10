@@ -1608,6 +1608,7 @@ For merge will be used mine base.
 			var cas = GetSelectedItems().ToList();
 
 			using(StartBulkOperation())
+			using(new Waiter(this))
 			{
 				foreach (var ca in cas)
 				{
