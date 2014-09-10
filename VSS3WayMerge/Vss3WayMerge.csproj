@@ -42,12 +42,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Reactive.Core">
-      <HintPath>$(SolutionDir)packages\Rx-Core.2.1.30214.0\lib\Net40\System.Reactive.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Interfaces">
-      <HintPath>$(SolutionDir)packages\Rx-Interfaces.2.1.30214.0\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -97,13 +91,6 @@
     </Compile>
     <Compile Include="Status.cs" />
     <Compile Include="TempManager.cs" />
-    <Compile Include="Tools\CancellableWait.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Tools\CancellableWait.Designer.cs">
-      <DependentUpon>CancellableWait.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\Waiter.cs" />
     <Compile Include="VJP\JournalParser.cs" />
     <Compile Include="VJP\VssChangeType.cs" />
@@ -130,9 +117,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ScanRules.resx">
       <DependentUpon>ScanRules.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tools\CancellableWait.resx">
-      <DependentUpon>CancellableWait.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Vss3WayMerge.resx">
       <DependentUpon>Vss3WayMerge.cs</DependentUpon>

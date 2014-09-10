@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -77,11 +76,25 @@ namespace Vss3WayMerge
 			CheckChanged(null, null);
 		}
 
+		class DisposeAction : IDisposable
+		{
+			readonly Action _a;
+			public DisposeAction(Action a)
+			{
+				_a = a;
+			}
+
+			public void Dispose()
+			{
+				_a();
+			}
+		}
+
 		IDisposable StartBulkOperation()
 		{
 			_bulkOperation = true;
 
-			return Disposable.Create(() => _bulkOperation = false);
+			return new DisposeAction(() => _bulkOperation = false);
 		}
 
 		List<VssChangeAtom> _listItems = new List<VssChangeAtom>();
