@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using SourceSafeTypeLib;
 using Vss3WayMerge.VJP;
@@ -13,14 +15,16 @@ namespace Vss3WayMerge.Core
 	{
 		readonly VSSDatabase _vss;
 		readonly CancellationToken _ct;
+		readonly Regex _exclude;
 
 		VssFileCache _cache;
 		DateTime _baseTime;
 
-		public ScanForBaseline(VSSDatabase vss, CancellationToken ct)
+		public ScanForBaseline(VSSDatabase vss, Regex exclude, CancellationToken ct)
 		{
 			_vss = vss;
 			_ct = ct;
+			_exclude = exclude;
 		}
 
 		class ItemHistoryEntry
@@ -84,35 +88,44 @@ namespace Vss3WayMerge.Core
 		{
 			_baseTime = baseTime;
 
+			if (project == "$")
+				project = "$/";
+
 			var ret = new List<string>();
 			
 			var vssItem = _vss.VSSItem[project];
 			using (_cache = new VssFileCache(".rev-cache", _vss.SrcSafeIni))
 			{
-				ScanForHistory(vssItem, ret);
+				ScanForHistory(vssItem.Spec, vssItem, ret);
 			}
 
 			return ret;
 		}
 
-		void ScanForHistory(IVSSItem vssItem, List<string> ret)
+		void ScanForHistory(string spec, IVSSItem vssItem, ICollection<string> ret)
 		{
 			_ct.ThrowIfCancellationRequested();
 
-			var spec = vssItem.Spec;
 			CurrentItemSpec = spec;
+
+			if (_exclude != null && _exclude.IsMatch(spec))
+				return;
 
 			if (vssItem.Type == 0)
 			{
 				foreach (IVSSItem child in vssItem.Items)
 				{
-					ScanForHistory(child, ret);
+					ScanForHistory(child.Spec, child, ret);
 				}
 			}
 			else
 			{
+				var versionNumber = vssItem.VersionNumber;
+				var timestamp = vssItem.VSSVersion.Date.Ticks;
+
 				Item item;
-				var cachedData = _cache.GetContent(spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks);
+
+				var cachedData = _cache.GetContent(spec, versionNumber, timestamp);
 				if (cachedData != null)
 				{
 					item = new Item(spec, cachedData);
@@ -124,7 +137,7 @@ namespace Vss3WayMerge.Core
 						History = LoadHistory(vssItem)
 					};
 
-					_cache.AddContent(spec, vssItem.VersionNumber, vssItem.VSSVersion.Date.Ticks, item.ToString());
+					_cache.AddContent(spec, versionNumber, timestamp, item.ToString());
 				}
 
 				var newChanges = item.History.Where(h => h.Modified >= _baseTime).ToArray();
@@ -140,46 +153,60 @@ namespace Vss3WayMerge.Core
 
 		List<ItemHistoryEntry> LoadHistory(IVSSItem vssItem)
 		{
-			var ret = new List<ItemHistoryEntry>(vssItem.Versions.Count);
-
-			foreach (IVSSVersion vssVersion in vssItem.Versions)
+			try
 			{
-				_ct.ThrowIfCancellationRequested();
+				var ret = new List<ItemHistoryEntry>(vssItem.Versions.Count);
 
-				var spec = vssItem.Spec;
-				var action = vssVersion.Action;
-
-				VssChangeType ct;
-
-				if(action.StartsWith("Checked in "))
-					ct = VssChangeType.CheckIn;
-				else if (action.StartsWith("Created "))
-					ct = VssChangeType.Created;
-				else if (action.StartsWith("Labeled "))
-					ct = VssChangeType.Labeled;
-				else if (action.StartsWith("Branched at version "))
-					ct = VssChangeType.Branched;
-				else if (action.StartsWith("Archived versions of "))
-					ct = VssChangeType.Branched;
-				else if (action.StartsWith("Rollback to version "))
-					ct = VssChangeType.Branched;
-				else
+				foreach (IVSSVersion vssVersion in vssItem.Versions)
 				{
-					return null;
+					_ct.ThrowIfCancellationRequested();
+
+					//var spec = vssItem.Spec;
+					var action = vssVersion.Action;
+
+					VssChangeType ct;
+
+					if (action.StartsWith("Checked in "))
+						ct = VssChangeType.CheckIn;
+					else if (action.StartsWith("Created "))
+						ct = VssChangeType.Created;
+					else if (action.StartsWith("Labeled "))
+						ct = VssChangeType.Labeled;
+					else if (action.StartsWith("Branched at version "))
+						ct = VssChangeType.Branched;
+					else if (action.StartsWith("Archived versions of "))
+						ct = VssChangeType.Branched;
+					else if (action.StartsWith("Rollback to version "))
+						ct = VssChangeType.Branched;
+					else
+					{
+						File.AppendAllText("_unknown-actions", action + "\r\n");
+						continue;
+					}
+
+					if (ct == VssChangeType.Labeled)
+						continue;
+
+					var histEnt = new ItemHistoryEntry
+					{
+						Action = ct,
+						Modified = vssVersion.Date,
+						VssVersion = vssVersion.VersionNumber
+					};
+
+					ret.Add(histEnt);
 				}
-
-				if (ct == VssChangeType.Labeled)
-					continue;
-
-				var histEnt = new ItemHistoryEntry {
-					Action = ct,
-					Modified = vssVersion.Date,
-					VssVersion = vssVersion.VersionNumber
-				};
-				
-				ret.Add(histEnt);
+				return ret;
 			}
-			return ret;
+			catch (OperationCanceledException)
+			{
+				throw;
+			}
+			catch (Exception ex)
+			{
+				File.AppendAllText("_errors", string.Format("{0}: {1}\r\n\r\n\r\n", vssItem.Spec, ex));
+				return new List<ItemHistoryEntry>();
+			}
 		}
 	}
 }

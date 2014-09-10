@@ -40,6 +40,12 @@
 			this.buttonParseJournal = new System.Windows.Forms.Button();
 			this.textBoxJournal = new System.Windows.Forms.TextBox();
 			this.tabPageDetectChangesByDatabase = new System.Windows.Forms.TabPage();
+			this.linkLabelScanRules = new System.Windows.Forms.LinkLabel();
+			this.dateTimePickerBaseTime = new System.Windows.Forms.DateTimePicker();
+			this.label3 = new System.Windows.Forms.Label();
+			this.dateTimePickerBaseDate = new System.Windows.Forms.DateTimePicker();
+			this.textBoxScanProject = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
 			this.buttonLoadVSSDB = new System.Windows.Forms.Button();
 			this.radioButtonVssConnected = new System.Windows.Forms.RadioButton();
 			this.radioButtonDetached = new System.Windows.Forms.RadioButton();
@@ -106,11 +112,7 @@
 			this.comboBoxMerger = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.label2 = new System.Windows.Forms.Label();
-			this.textBoxScanProject = new System.Windows.Forms.TextBox();
-			this.dateTimePickerBaseDate = new System.Windows.Forms.DateTimePicker();
-			this.label3 = new System.Windows.Forms.Label();
-			this.dateTimePickerBaseTime = new System.Windows.Forms.DateTimePicker();
+			this.label12 = new System.Windows.Forms.Label();
 			this.tabControl.SuspendLayout();
 			this.tabPageForMergeFiles.SuspendLayout();
 			this.tabControlDetectChanges.SuspendLayout();
@@ -124,8 +126,9 @@
 			// 
 			// label1
 			// 
+			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(579, 9);
+			this.label1.Location = new System.Drawing.Point(689, 9);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(104, 13);
 			this.label1.TabIndex = 5;
@@ -150,12 +153,13 @@
 			this.tabControl.Location = new System.Drawing.Point(0, 0);
 			this.tabControl.Name = "tabControl";
 			this.tabControl.SelectedIndex = 0;
-			this.tabControl.Size = new System.Drawing.Size(1063, 531);
+			this.tabControl.Size = new System.Drawing.Size(1063, 556);
 			this.tabControl.TabIndex = 0;
 			// 
 			// tabPageForMergeFiles
 			// 
 			this.tabPageForMergeFiles.BackColor = System.Drawing.SystemColors.Control;
+			this.tabPageForMergeFiles.Controls.Add(this.label12);
 			this.tabPageForMergeFiles.Controls.Add(this.tabControlDetectChanges);
 			this.tabPageForMergeFiles.Controls.Add(this.radioButtonVssConnected);
 			this.tabPageForMergeFiles.Controls.Add(this.radioButtonDetached);
@@ -175,7 +179,7 @@
 			this.tabPageForMergeFiles.Location = new System.Drawing.Point(4, 22);
 			this.tabPageForMergeFiles.Name = "tabPageForMergeFiles";
 			this.tabPageForMergeFiles.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageForMergeFiles.Size = new System.Drawing.Size(1055, 505);
+			this.tabPageForMergeFiles.Size = new System.Drawing.Size(1055, 530);
 			this.tabPageForMergeFiles.TabIndex = 4;
 			this.tabPageForMergeFiles.Text = "Files for merge";
 			// 
@@ -185,10 +189,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tabControlDetectChanges.Controls.Add(this.tabPageDetectChangesByJournal);
 			this.tabControlDetectChanges.Controls.Add(this.tabPageDetectChangesByDatabase);
-			this.tabControlDetectChanges.Location = new System.Drawing.Point(8, 56);
+			this.tabControlDetectChanges.Location = new System.Drawing.Point(6, 84);
 			this.tabControlDetectChanges.Name = "tabControlDetectChanges";
 			this.tabControlDetectChanges.SelectedIndex = 0;
-			this.tabControlDetectChanges.Size = new System.Drawing.Size(1041, 66);
+			this.tabControlDetectChanges.Size = new System.Drawing.Size(1043, 66);
 			this.tabControlDetectChanges.TabIndex = 18;
 			// 
 			// tabPageDetectChangesByJournal
@@ -199,7 +203,7 @@
 			this.tabPageDetectChangesByJournal.Location = new System.Drawing.Point(4, 22);
 			this.tabPageDetectChangesByJournal.Name = "tabPageDetectChangesByJournal";
 			this.tabPageDetectChangesByJournal.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageDetectChangesByJournal.Size = new System.Drawing.Size(1033, 40);
+			this.tabPageDetectChangesByJournal.Size = new System.Drawing.Size(1035, 40);
 			this.tabPageDetectChangesByJournal.TabIndex = 0;
 			this.tabPageDetectChangesByJournal.Text = "By journal file (fast)";
 			this.tabPageDetectChangesByJournal.UseVisualStyleBackColor = true;
@@ -217,7 +221,8 @@
 			// 
 			// buttonParseJournal
 			// 
-			this.buttonParseJournal.Location = new System.Drawing.Point(493, 6);
+			this.buttonParseJournal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonParseJournal.Location = new System.Drawing.Point(915, 6);
 			this.buttonParseJournal.Name = "buttonParseJournal";
 			this.buttonParseJournal.Size = new System.Drawing.Size(114, 23);
 			this.buttonParseJournal.TabIndex = 15;
@@ -228,16 +233,19 @@
 			// 
 			// textBoxJournal
 			// 
+			this.textBoxJournal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxJournal.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssJournalFiles", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
 			this.textBoxJournal.Location = new System.Drawing.Point(108, 8);
 			this.textBoxJournal.Name = "textBoxJournal";
-			this.textBoxJournal.Size = new System.Drawing.Size(379, 20);
+			this.textBoxJournal.Size = new System.Drawing.Size(801, 20);
 			this.textBoxJournal.TabIndex = 14;
 			this.textBoxJournal.Text = global::Vss3WayMerge.Properties.Settings.Default.VssJournalFiles;
 			this.toolTip.SetToolTip(this.textBoxJournal, "One or mode journal files for parse.\r\n\r\nSeparator ;");
 			// 
 			// tabPageDetectChangesByDatabase
 			// 
+			this.tabPageDetectChangesByDatabase.Controls.Add(this.linkLabelScanRules);
 			this.tabPageDetectChangesByDatabase.Controls.Add(this.dateTimePickerBaseTime);
 			this.tabPageDetectChangesByDatabase.Controls.Add(this.label3);
 			this.tabPageDetectChangesByDatabase.Controls.Add(this.dateTimePickerBaseDate);
@@ -247,15 +255,75 @@
 			this.tabPageDetectChangesByDatabase.Location = new System.Drawing.Point(4, 22);
 			this.tabPageDetectChangesByDatabase.Name = "tabPageDetectChangesByDatabase";
 			this.tabPageDetectChangesByDatabase.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageDetectChangesByDatabase.Size = new System.Drawing.Size(1033, 40);
+			this.tabPageDetectChangesByDatabase.Size = new System.Drawing.Size(1035, 40);
 			this.tabPageDetectChangesByDatabase.TabIndex = 1;
 			this.tabPageDetectChangesByDatabase.Text = "By VSS database (slow, precise)";
 			this.tabPageDetectChangesByDatabase.UseVisualStyleBackColor = true;
 			// 
+			// linkLabelScanRules
+			// 
+			this.linkLabelScanRules.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.linkLabelScanRules.AutoSize = true;
+			this.linkLabelScanRules.Location = new System.Drawing.Point(513, 11);
+			this.linkLabelScanRules.Name = "linkLabelScanRules";
+			this.linkLabelScanRules.Size = new System.Drawing.Size(84, 13);
+			this.linkLabelScanRules.TabIndex = 6;
+			this.linkLabelScanRules.TabStop = true;
+			this.linkLabelScanRules.Text = "Exclude Rules...";
+			this.linkLabelScanRules.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelScanRules_LinkClicked);
+			// 
+			// dateTimePickerBaseTime
+			// 
+			this.dateTimePickerBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.dateTimePickerBaseTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+			this.dateTimePickerBaseTime.Location = new System.Drawing.Point(835, 8);
+			this.dateTimePickerBaseTime.Name = "dateTimePickerBaseTime";
+			this.dateTimePickerBaseTime.Size = new System.Drawing.Size(83, 20);
+			this.dateTimePickerBaseTime.TabIndex = 5;
+			this.dateTimePickerBaseTime.Value = new System.DateTime(2014, 9, 9, 0, 0, 0, 0);
+			// 
+			// label3
+			// 
+			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(616, 11);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(60, 13);
+			this.label3.TabIndex = 4;
+			this.label3.Text = "Base point:";
+			// 
+			// dateTimePickerBaseDate
+			// 
+			this.dateTimePickerBaseDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.dateTimePickerBaseDate.Location = new System.Drawing.Point(682, 8);
+			this.dateTimePickerBaseDate.Name = "dateTimePickerBaseDate";
+			this.dateTimePickerBaseDate.Size = new System.Drawing.Size(147, 20);
+			this.dateTimePickerBaseDate.TabIndex = 3;
+			this.dateTimePickerBaseDate.Value = new System.DateTime(2013, 9, 1, 0, 0, 0, 0);
+			// 
+			// textBoxScanProject
+			// 
+			this.textBoxScanProject.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxScanProject.Location = new System.Drawing.Point(79, 8);
+			this.textBoxScanProject.Name = "textBoxScanProject";
+			this.textBoxScanProject.Size = new System.Drawing.Size(428, 20);
+			this.textBoxScanProject.TabIndex = 2;
+			this.textBoxScanProject.Text = "$/Common/Converters2";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(3, 11);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(67, 13);
+			this.label2.TabIndex = 1;
+			this.label2.Text = "VSS Project:";
+			// 
 			// buttonLoadVSSDB
 			// 
 			this.buttonLoadVSSDB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonLoadVSSDB.Location = new System.Drawing.Point(922, 6);
+			this.buttonLoadVSSDB.Location = new System.Drawing.Point(924, 6);
 			this.buttonLoadVSSDB.Name = "buttonLoadVSSDB";
 			this.buttonLoadVSSDB.Size = new System.Drawing.Size(105, 23);
 			this.buttonLoadVSSDB.TabIndex = 0;
@@ -267,22 +335,24 @@
 			// 
 			// radioButtonVssConnected
 			// 
+			this.radioButtonVssConnected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.radioButtonVssConnected.AutoSize = true;
 			this.radioButtonVssConnected.Checked = true;
 			this.radioButtonVssConnected.ForeColor = System.Drawing.Color.Red;
-			this.radioButtonVssConnected.Location = new System.Drawing.Point(108, 31);
+			this.radioButtonVssConnected.Location = new System.Drawing.Point(600, 59);
 			this.radioButtonVssConnected.Name = "radioButtonVssConnected";
-			this.radioButtonVssConnected.Size = new System.Drawing.Size(150, 17);
+			this.radioButtonVssConnected.Size = new System.Drawing.Size(170, 17);
 			this.radioButtonVssConnected.TabIndex = 10;
 			this.radioButtonVssConnected.TabStop = true;
-			this.radioButtonVssConnected.Text = "VSS Connect (Warning !!!)";
+			this.radioButtonVssConnected.Text = "VSS Connect 2 mine (Warn !!!)";
 			this.toolTip.SetToolTip(this.radioButtonVssConnected, resources.GetString("radioButtonVssConnected.ToolTip"));
 			this.radioButtonVssConnected.UseVisualStyleBackColor = true;
 			// 
 			// radioButtonDetached
 			// 
+			this.radioButtonDetached.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.radioButtonDetached.AutoSize = true;
-			this.radioButtonDetached.Location = new System.Drawing.Point(264, 31);
+			this.radioButtonDetached.Location = new System.Drawing.Point(776, 59);
 			this.radioButtonDetached.Name = "radioButtonDetached";
 			this.radioButtonDetached.Size = new System.Drawing.Size(72, 17);
 			this.radioButtonDetached.TabIndex = 11;
@@ -293,8 +363,8 @@
 			// 
 			// buttonParseForMergeList
 			// 
-			this.buttonParseForMergeList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonParseForMergeList.Location = new System.Drawing.Point(8, 476);
+			this.buttonParseForMergeList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonParseForMergeList.Location = new System.Drawing.Point(935, 499);
 			this.buttonParseForMergeList.Name = "buttonParseForMergeList";
 			this.buttonParseForMergeList.Size = new System.Drawing.Size(114, 23);
 			this.buttonParseForMergeList.TabIndex = 17;
@@ -306,10 +376,11 @@
 			// 
 			// textBoxDetachedMergeDestination
 			// 
+			this.textBoxDetachedMergeDestination.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxDetachedMergeDestination.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "DetachedMergeDestination", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxDetachedMergeDestination.Location = new System.Drawing.Point(342, 30);
+			this.textBoxDetachedMergeDestination.Location = new System.Drawing.Point(854, 58);
 			this.textBoxDetachedMergeDestination.Name = "textBoxDetachedMergeDestination";
-			this.textBoxDetachedMergeDestination.Size = new System.Drawing.Size(250, 20);
+			this.textBoxDetachedMergeDestination.Size = new System.Drawing.Size(191, 20);
 			this.textBoxDetachedMergeDestination.TabIndex = 12;
 			this.textBoxDetachedMergeDestination.Text = global::Vss3WayMerge.Properties.Settings.Default.DetachedMergeDestination;
 			this.toolTip.SetToolTip(this.textBoxDetachedMergeDestination, "Merged results root. Directory will be created.\r\n\r\nExisting directory will not be" +
@@ -318,10 +389,10 @@
 			// textBoxTheirsPwd
 			// 
 			this.textBoxTheirsPwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsPassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxTheirsPwd.Location = new System.Drawing.Point(526, 6);
+			this.textBoxTheirsPwd.Location = new System.Drawing.Point(190, 29);
 			this.textBoxTheirsPwd.Name = "textBoxTheirsPwd";
 			this.textBoxTheirsPwd.PasswordChar = '*';
-			this.textBoxTheirsPwd.Size = new System.Drawing.Size(43, 20);
+			this.textBoxTheirsPwd.Size = new System.Drawing.Size(75, 20);
 			this.textBoxTheirsPwd.TabIndex = 4;
 			this.textBoxTheirsPwd.Text = global::Vss3WayMerge.Properties.Settings.Default.vssTheirsPassword;
 			// 
@@ -331,12 +402,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxForMergeUnparsedList.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "LastParseableText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxForMergeUnparsedList.Location = new System.Drawing.Point(6, 128);
+			this.textBoxForMergeUnparsedList.Location = new System.Drawing.Point(6, 156);
 			this.textBoxForMergeUnparsedList.MaxLength = 1000000000;
 			this.textBoxForMergeUnparsedList.Multiline = true;
 			this.textBoxForMergeUnparsedList.Name = "textBoxForMergeUnparsedList";
 			this.textBoxForMergeUnparsedList.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBoxForMergeUnparsedList.Size = new System.Drawing.Size(1043, 342);
+			this.textBoxForMergeUnparsedList.Size = new System.Drawing.Size(923, 366);
 			this.textBoxForMergeUnparsedList.TabIndex = 16;
 			this.textBoxForMergeUnparsedList.Text = global::Vss3WayMerge.Properties.Settings.Default.LastParseableText;
 			this.textBoxForMergeUnparsedList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxForMergeUnparsedList_KeyDown);
@@ -344,9 +415,9 @@
 			// textBoxTheirsUser
 			// 
 			this.textBoxTheirsUser.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssTheirsUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxTheirsUser.Location = new System.Drawing.Point(464, 6);
+			this.textBoxTheirsUser.Location = new System.Drawing.Point(108, 29);
 			this.textBoxTheirsUser.Name = "textBoxTheirsUser";
-			this.textBoxTheirsUser.Size = new System.Drawing.Size(56, 20);
+			this.textBoxTheirsUser.Size = new System.Drawing.Size(76, 20);
 			this.textBoxTheirsUser.TabIndex = 3;
 			this.textBoxTheirsUser.Text = global::Vss3WayMerge.Properties.Settings.Default.vssTheirsUser;
 			// 
@@ -364,17 +435,18 @@
 			// 
 			this.textBoxMinePwd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxMinePwd.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssMinePassword", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxMinePwd.Location = new System.Drawing.Point(1008, 6);
+			this.textBoxMinePwd.Location = new System.Drawing.Point(908, 32);
 			this.textBoxMinePwd.Name = "textBoxMinePwd";
 			this.textBoxMinePwd.PasswordChar = '*';
-			this.textBoxMinePwd.Size = new System.Drawing.Size(41, 20);
+			this.textBoxMinePwd.Size = new System.Drawing.Size(99, 20);
 			this.textBoxMinePwd.TabIndex = 8;
 			this.textBoxMinePwd.Text = global::Vss3WayMerge.Properties.Settings.Default.vssMinePassword;
 			// 
 			// label6
 			// 
+			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(5, 33);
+			this.label6.Location = new System.Drawing.Point(500, 61);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(94, 13);
 			this.label6.TabIndex = 9;
@@ -384,18 +456,17 @@
 			// 
 			this.textBoxMineUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxMineUser.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "vssMineUser", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxMineUser.Location = new System.Drawing.Point(945, 6);
+			this.textBoxMineUser.Location = new System.Drawing.Point(799, 32);
 			this.textBoxMineUser.Name = "textBoxMineUser";
-			this.textBoxMineUser.Size = new System.Drawing.Size(57, 20);
+			this.textBoxMineUser.Size = new System.Drawing.Size(103, 20);
 			this.textBoxMineUser.TabIndex = 7;
 			this.textBoxMineUser.Text = global::Vss3WayMerge.Properties.Settings.Default.vssMineUser;
 			// 
 			// textBoxVssIniMine
 			// 
-			this.textBoxVssIniMine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxVssIniMine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxVssIniMine.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Vss3WayMerge.Properties.Settings.Default, "VssMine", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBoxVssIniMine.Location = new System.Drawing.Point(689, 6);
+			this.textBoxVssIniMine.Location = new System.Drawing.Point(799, 6);
 			this.textBoxVssIniMine.Name = "textBoxVssIniMine";
 			this.textBoxVssIniMine.Size = new System.Drawing.Size(250, 20);
 			this.textBoxVssIniMine.TabIndex = 6;
@@ -406,7 +477,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(371, 9);
+			this.label5.Location = new System.Drawing.Point(6, 32);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(87, 13);
 			this.label5.TabIndex = 2;
@@ -862,59 +933,21 @@
 			this.toolTip.InitialDelay = 100;
 			this.toolTip.ReshowDelay = 20;
 			// 
-			// label2
+			// label12
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(3, 11);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(67, 13);
-			this.label2.TabIndex = 1;
-			this.label2.Text = "VSS Project:";
-			// 
-			// textBoxScanProject
-			// 
-			this.textBoxScanProject.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxScanProject.Location = new System.Drawing.Point(79, 8);
-			this.textBoxScanProject.Name = "textBoxScanProject";
-			this.textBoxScanProject.Size = new System.Drawing.Size(529, 20);
-			this.textBoxScanProject.TabIndex = 2;
-			this.textBoxScanProject.Text = "$/Common/Converters2";
-			// 
-			// dateTimePickerBaseDate
-			// 
-			this.dateTimePickerBaseDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.dateTimePickerBaseDate.Location = new System.Drawing.Point(680, 8);
-			this.dateTimePickerBaseDate.Name = "dateTimePickerBaseDate";
-			this.dateTimePickerBaseDate.Size = new System.Drawing.Size(147, 20);
-			this.dateTimePickerBaseDate.TabIndex = 3;
-			this.dateTimePickerBaseDate.Value = new System.DateTime(2013, 9, 1, 0, 0, 0, 0);
-			// 
-			// label3
-			// 
-			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(614, 11);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(60, 13);
-			this.label3.TabIndex = 4;
-			this.label3.Text = "Base point:";
-			// 
-			// dateTimePickerBaseTime
-			// 
-			this.dateTimePickerBaseTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.dateTimePickerBaseTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-			this.dateTimePickerBaseTime.Location = new System.Drawing.Point(833, 8);
-			this.dateTimePickerBaseTime.Name = "dateTimePickerBaseTime";
-			this.dateTimePickerBaseTime.Size = new System.Drawing.Size(83, 20);
-			this.dateTimePickerBaseTime.TabIndex = 5;
-			this.dateTimePickerBaseTime.Value = new System.DateTime(2014, 9, 9, 0, 0, 0, 0);
+			this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(706, 35);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(87, 13);
+			this.label12.TabIndex = 19;
+			this.label12.Text = "User + Password";
 			// 
 			// Vss3WayMerge
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1063, 531);
+			this.ClientSize = new System.Drawing.Size(1063, 556);
 			this.Controls.Add(this.tabControl);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "Vss3WayMerge";
@@ -1021,6 +1054,8 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.DateTimePicker dateTimePickerBaseTime;
+		private System.Windows.Forms.LinkLabel linkLabelScanRules;
+		private System.Windows.Forms.Label label12;
 	}
 }
 

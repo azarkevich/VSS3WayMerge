@@ -80,6 +80,12 @@
     <Compile Include="OperationProgress.Designer.cs">
       <DependentUpon>OperationProgress.cs</DependentUpon>
     </Compile>
+    <Compile Include="ScanRules.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScanRules.Designer.cs">
+      <DependentUpon>ScanRules.cs</DependentUpon>
+    </Compile>
     <Compile Include="Status.cs" />
     <Compile Include="Tools\CancellableWait.cs">
       <SubType>Form</SubType>
@@ -108,6 +114,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OperationProgress.resx">
       <DependentUpon>OperationProgress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScanRules.resx">
+      <DependentUpon>ScanRules.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\CancellableWait.resx">
       <DependentUpon>CancellableWait.cs</DependentUpon>

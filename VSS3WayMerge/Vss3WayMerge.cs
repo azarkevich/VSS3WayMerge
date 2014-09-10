@@ -21,7 +21,6 @@ using Vss3WayMerge.Properties;
 using System.Collections.Generic;
 using Vss3WayMerge.Tools;
 using Vss3WayMerge.VJP;
-using vsslib;
 
 namespace Vss3WayMerge
 {
@@ -64,6 +63,9 @@ namespace Vss3WayMerge
 			_tempDir = Path.Combine(rootTempDir, Process.GetCurrentProcess().Id.ToString());
 
 			PrepareTemp(rootTempDir);
+
+			if (!string.IsNullOrWhiteSpace(Settings.Default.ScanRules))
+				linkLabelScanRules.Text = "* " + linkLabelScanRules.Text;
 		}
 
 		void PrepareTemp(string rootTempDir)
@@ -1521,6 +1523,47 @@ For merge will be used mine base.
 			return base.ProcessKeyPreview(ref m);
 		}
 
+		static Regex GetScanRegex()
+		{
+			var sb = new StringBuilder();
+
+			const string slash = "122B348A-ED3D-4342-A7C3-DB4612D19BF6";
+			const string star = "1BE25398-DF69-444F-B4E3-54E7054D37A8";
+			const string starstar = "9E8A717A-8435-4610-AE1D-19FFA1073CCD";
+			const string question = "047CCB74-5E49-461E-8014-6ACEEC242C31";
+			var sbx = new StringBuilder();
+			foreach (var rule in Settings.Default.ScanRules.Split('\n').Select(r => r.Trim()).Where(r => r != ""))
+			{
+				sbx.Clear();
+				sbx.Append(rule);
+				sbx.Replace("/", slash);
+				sbx.Replace("\\", slash);
+				sbx.Replace("?", question);
+				sbx.Replace("**", starstar);
+				sbx.Replace("*", star);
+
+				var escaped = Regex.Escape(sbx.ToString());
+				sbx.Clear();
+				sbx.Append(escaped);
+				sbx.Replace(slash, @"[\\/]");
+				sbx.Replace(question, ".?");
+				sbx.Replace(starstar, ".*");
+				sbx.Replace(star, @"[^/\\]*");
+
+				if (sb.Length != 0)
+					sb.Append("|");
+
+				sb.Append("(");
+				sb.Append(sbx);
+				sb.Append("$)");
+			}
+
+			if (sb.Length == 0)
+				return null;
+
+			return new Regex(sb.ToString(), RegexOptions.IgnoreCase);
+		}
+
 		void buttonLoadVSSDB_Click(object sender, EventArgs e)
 		{
 			textBoxForMergeUnparsedList.Text = "";
@@ -1529,6 +1572,8 @@ For merge will be used mine base.
 			if (theirsSsIni == null)
 				return;
 
+			var scanRx = GetScanRegex();
+
 			var vss = new VSSDatabase();
 			try
 			{
@@ -1536,11 +1581,11 @@ For merge will be used mine base.
 
 				var cts = new CancellationTokenSource();
 
-				var scaner = new ScanForBaseline(vss, cts.Token);
+				var scaner = new ScanForBaseline(vss, scanRx, cts.Token);
 				var project = textBoxScanProject.Text;
 				var baseTime = dateTimePickerBaseDate.Value.Date + dateTimePickerBaseTime.Value.TimeOfDay;
 
-				var task = Task.Factory.StartNew(() => scaner.Scan(project, baseTime));
+				var task = Task.Factory.StartNew(() => scaner.Scan(project, baseTime), cts.Token);
 
 				var dlg = new OperationProgress(() => scaner.CurrentItemSpec);
 
@@ -1566,6 +1611,16 @@ For merge will be used mine base.
 			{
 				vss.Close();
 			}
+		}
+
+		void linkLabelScanRules_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			new ScanRules().ShowDialog();
+
+			linkLabelScanRules.Text = linkLabelScanRules.Text.Trim(' ', '*', '\t');
+
+			if (!string.IsNullOrWhiteSpace(Settings.Default.ScanRules))
+				linkLabelScanRules.Text = "* " + linkLabelScanRules.Text;
 		}
 	}
 }
