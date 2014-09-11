@@ -176,7 +176,7 @@ namespace Vss3WayMerge
 			{
 				_mineDriver = new DetachedMergeDriver(textBoxMineDetachedDir.Text);
 			}
-			
+
 			if (radioButtonDetached.Checked)
 			{
 				_driver = new DetachedMergeDestinationDriver(this, textBoxDetachedMergeDestination.Text);
@@ -450,7 +450,7 @@ For merge will be used mine base.
 				}
 			}
 
-			if (Path.GetFileName(ssIni).ToLowerInvariant() != "srcsafe.ini")
+			if ((Path.GetFileName(ssIni) ?? "").ToLowerInvariant() != "srcsafe.ini")
 			{
 				ShowError("Should be specified VSS dir or scrsafe.ini path for " + hint);
 				return null;
@@ -651,29 +651,16 @@ For merge will be used mine base.
 
 		bool StartMergerCommon(string leftPath, string leftTitle, string rightPath, string rightTitle, string basePath, string baseTitle, string mergePath, string mergedTitle)
 		{
-			var mtool = comboBoxMerger.SelectedItem as MergerToolDefinition;
-
-			if (mtool == null)
-			{
-				mtool = new MergerToolDefinition {
-					Exe = textBoxCustomMergeExe.Text,
-					Diff = textBoxCustomDiff.Text,
-					Merge = textBoxCustomMerge.Text,
-				};
-			}
+			var mtool = (comboBoxMerger.SelectedItem as MergerToolDefinition) ?? new MergerToolDefinition {
+				Exe = textBoxCustomMergeExe.Text,
+				Diff = textBoxCustomDiff.Text,
+				Merge = textBoxCustomMerge.Text,
+			};
 
 			if (mergePath != null && !File.Exists(mergePath))
 				File.Create(mergePath).Close();
 
-			string strTemplate;
-			if (basePath == null)
-			{
-				strTemplate = mtool.Diff;
-			}
-			else
-			{
-				strTemplate = mtool.Merge;
-			}
+			var strTemplate = (basePath == null) ? mtool.Diff : mtool.Merge;
 
 			var args = strTemplate
 				.Replace("$LEFT$", '"' + (leftPath ?? "") + '"')
@@ -694,6 +681,9 @@ For merge will be used mine base.
 			try
 			{
 				var p = Process.Start(mtool.Exe, args);
+				if(p == null)
+					throw new ApplicationException("Can't start: " + mtool.Exe);
+
 				p.WaitForExit();
 
 				if (p.ExitCode == 0 && mergePath != null)
@@ -751,8 +741,9 @@ For merge will be used mine base.
 				var clrRuntimeInfo = (ICLRRuntimeInfo)RuntimeEnvironment.GetRuntimeInterfaceAsObject(Guid.Empty, typeof(ICLRRuntimeInfo).GUID);
 				clrRuntimeInfo.BindAsLegacyV2Runtime();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				ShowError("Enable bind as legacy runtime error: " + ex.Message);
 			}
 
 			// Get a handle to a copy of this form's system (window) menu
@@ -906,7 +897,7 @@ For merge will be used mine base.
 			return selected;
 		}
 
-		VssChangeAtom[] GetSelectedItems()
+		IEnumerable<VssChangeAtom> GetSelectedItems()
 		{
 			return listViewChanged.SelectedIndices
 				.Cast<int>()
@@ -1039,8 +1030,9 @@ For merge will be used mine base.
 
 			if (ca.Status == Status.Unmergeable)
 			{
-				e.Item = new ListViewItem(new[] { ca.Spec, "", "Unmergeable", ca.StatusDetails ?? "", "" });
-				e.Item.ForeColor = Color.Gray;
+				e.Item = new ListViewItem(new[] { ca.Spec, "", "Unmergeable", ca.StatusDetails ?? "", "" }) {
+					ForeColor = Color.Gray
+				};
 			}
 			else
 			{
@@ -1110,8 +1102,10 @@ For merge will be used mine base.
 						break;
 				}
 
-				e.Item = new ListViewItem(new[] { ca.Spec, sb.ToString(), status, ca.StatusDetails ?? "", ca.MergedPath ?? "" }) { Tag = ca };
-				e.Item.ForeColor = foreColor;
+				e.Item = new ListViewItem(new[] { ca.Spec, sb.ToString(), status, ca.StatusDetails ?? "", ca.MergedPath ?? "" }) {
+					Tag = ca,
+					ForeColor = foreColor
+				};
 			}
 		}
 
@@ -1164,12 +1158,7 @@ For merge will be used mine base.
 							if (n.IsBranched)
 								sb.AppendFormat(" branched");
 							if (n.IsDeleted)
-							{
-								if (n.IsDeletedByMove)
-									sb.AppendFormat(" deleted_by_move");
-								else
-									sb.AppendFormat(" deleted");
-							}
+								sb.AppendFormat(n.IsDeletedByMove ? " deleted_by_move" : " deleted");
 							if (n.IsModified)
 								sb.AppendFormat(" modified");
 							if (n.IsRecovered)
@@ -1529,14 +1518,26 @@ For merge will be used mine base.
 				if (!task.IsCompleted)
 				{
 					cts.Cancel();
+					// ReSharper disable once MethodSupportsCancellation
 					task.Wait();
 				}
 
 				textBoxForMergeUnparsedList.Text = string.Join("\r\n", task.Result);
 			}
-			catch
+			catch (TaskCanceledException)
 			{
 				// TaskCancelled ...
+			}
+			catch (AggregateException ex)
+			{
+				if(!(ex.InnerException is TaskCanceledException))
+				{
+					ShowError(ex.Message);
+				}
+			}
+			catch (Exception ex)
+			{
+				ShowError(ex.Message);
 			}
 			finally
 			{
@@ -1636,7 +1637,7 @@ For merge will be used mine base.
 
 		void toolStripMenuItem2_Click(object sender, EventArgs e)
 		{
-			for (int i = 0; i < _listItems.Count; i++)
+			for (var i = 0; i < _listItems.Count; i++)
 			{
 				var ca = _listItems[i];
 				if (ca.Status == Status.Merged || ca.Status == Status.MergedNoChanges || ca.Status == Status.ResolvedAsMine || ca.Status == Status.ResolvedAsTheirs)

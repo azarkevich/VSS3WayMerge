@@ -178,5 +178,65 @@ namespace Vss3WayMerge.Properties {
                 this["MineDetachedDir"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MineDetached {
+            get {
+                return ((bool)(this["MineDetached"]));
+            }
+            set {
+                this["MineDetached"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DestinationDetachedChecked {
+            get {
+                return ((bool)(this["DestinationDetachedChecked"]));
+            }
+            set {
+                this["DestinationDetachedChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("$/Common/Converters2")]
+        public string VssProjectForScan {
+            get {
+                return ((string)(this["VssProjectForScan"]));
+            }
+            set {
+                this["VssProjectForScan"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2013-01-17")]
+        public global::System.DateTime SplitPointDate {
+            get {
+                return ((global::System.DateTime)(this["SplitPointDate"]));
+            }
+            set {
+                this["SplitPointDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2014-09-09")]
+        public global::System.DateTime SplitPointTime {
+            get {
+                return ((global::System.DateTime)(this["SplitPointTime"]));
+            }
+            set {
+                this["SplitPointTime"] = value;
+            }
+        }
     }
 }

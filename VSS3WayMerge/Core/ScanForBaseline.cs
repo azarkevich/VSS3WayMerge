@@ -53,7 +53,6 @@ namespace Vss3WayMerge.Core
 
 		class Item
 		{
-			public string Spec;
 			public List<ItemHistoryEntry> History;
 
 			public Item()
@@ -62,7 +61,6 @@ namespace Vss3WayMerge.Core
 
 			public Item(string spec, string serialized)
 			{
-				Spec = spec;
 				History = serialized
 					.Split('\n')
 					.Select(l => l.Trim())
@@ -133,7 +131,6 @@ namespace Vss3WayMerge.Core
 				else
 				{
 					item = new Item {
-						Spec = spec,
 						History = LoadHistory(vssItem)
 					};
 
